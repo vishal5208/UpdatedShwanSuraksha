@@ -1,5 +1,7 @@
+import { LandingPage } from "./pages";
+
 function App() {
-	return <div>vishal</div>;
+	return <LandingPage />;
 }
 
 export default App;
