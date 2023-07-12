@@ -75,11 +75,11 @@ const Claim = () => {
 										{policy.owner}
 									</p>
 									<p className="mb-2">
-										<span className="font-bold text-gray-800">Premium:</span>{" "}
+										<span className="font-bold text-gray-800">Premium:</span> $
 										{ethers.utils.formatUnits(policy.premium, 6)}
 									</p>
 									<p className="mb-2">
-										<span className="font-bold text-gray-800">Payout:</span>{" "}
+										<span className="font-bold text-gray-800">Payout:</span> $
 										{ethers.utils.formatUnits(policy.payout, 6)}
 									</p>
 									<p className="mb-2">
