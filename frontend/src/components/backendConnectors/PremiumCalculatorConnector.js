@@ -13,7 +13,6 @@ export const calculatePremium = async ({
 	healthCondition,
 	policyType,
 }) => {
-	console.log("I got : ", breed, age, region, healthCondition, policyType);
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			await requestAccount();

@@ -1,9 +1,14 @@
-const { ethers } = require("ethers");
+import { useCallback, useContext } from "react";
+import { calculatePremium } from "./PremiumCalculatorConnector";
+
+const { ethers, errors } = require("ethers");
 const { requestAccount } = require("./commonConnectors");
 const contracts = require("../../constants/contracts.json");
 
 const shwanSurkshaAddress = contracts.ShwanSurksha[1];
 const shwanSurkshaAbi = contracts.ShwanSurksha[0];
+const usdcContractAddress = contracts.USDCToken[1];
+const usdcTokenAbi = contracts.USDCToken[0];
 
 export const addPolicy = async ({
 	breed,
@@ -25,11 +30,22 @@ export const addPolicy = async ({
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
 			const signer = provider.getSigner();
 			console.log({ signer });
+
+			// shwansurksha contract
 			const contract = new ethers.Contract(
 				shwanSurkshaAddress,
 				shwanSurkshaAbi,
 				signer
 			);
+
+			// usdc contract
+			const usdcContract = new ethers.Contract(
+				usdcContractAddress,
+				usdcTokenAbi,
+				signer
+			);
+
+			console.log("USDC : ", usdcContract);
 
 			//  const startDate = new Date();
 			const startDate = new Date(Date.now() + 2 * 60 * 1000); // Set start date to 2 minutes ahead of the current time
@@ -39,6 +55,39 @@ export const addPolicy = async ({
 			endDate.setFullYear(startDate.getFullYear() + 1); // Set end date to 1 year after start date
 			const startTimestamp = Math.floor(startDate.getTime() / 1000);
 			const endTimestamp = Math.floor(endDate.getTime() / 1000);
+
+			const result = await calculatePremium({
+				breed,
+				age,
+				region,
+				healthCondition,
+				policyType,
+			});
+
+			const premimum = result.success ? result.data : null;
+
+			if (!premimum) {
+				console.log(result.msg);
+				return {
+					success: false,
+					msg: result.msg,
+				};
+			}
+
+			// Convert premimum to BigNumber
+			const premimumBigNumber = ethers.utils.parseUnits(premimum.toString(), 6);
+
+			console.log("premium : ", premimumBigNumber);
+
+			try {
+				const approveTx = await usdcContract.approve(
+					shwanSurkshaAddress,
+					premimumBigNumber
+				);
+				await approveTx.wait();
+			} catch (error) {
+				console.log(error.message);
+			}
 
 			const addPolicyTx = await contract.addPolicy(
 				breed,
