@@ -65,6 +65,8 @@ const QuoteForm = () => {
 
 		if (policyResult.success) {
 			setPolicyId(policyResult.policyId);
+		} else {
+			setErrorMsg(policyResult.msg);
 		}
 	};
 
