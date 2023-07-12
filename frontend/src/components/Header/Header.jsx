@@ -9,8 +9,13 @@ const Header = () => {
 					ShwanSuraksha
 				</Link>
 				<ul className="flex space-x-7">
-					<li className="text-white hover:text-gray-300 cursor-pointer">
-						Get Quote
+					<li>
+						<Link
+							to="/quoteForm"
+							className="text-white hover:text-gray-300 cursor-pointer"
+						>
+							Get a Quote
+						</Link>
 					</li>
 					<li className="text-white hover:text-gray-300 cursor-pointer">
 						Claim Policy
