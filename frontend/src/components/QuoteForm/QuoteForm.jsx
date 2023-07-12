@@ -48,8 +48,8 @@ const QuoteForm = () => {
 		setPolicyType("");
 
 		// Set petDetails state using the existing state variable
-		setPetDetails((prevState) => ({
-			...prevState,
+		setPetDetails((petDetails) => ({
+			...petDetails,
 			...petDetailsData,
 		}));
 	};

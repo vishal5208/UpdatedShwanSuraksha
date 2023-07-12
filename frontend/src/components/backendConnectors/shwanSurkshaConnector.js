@@ -74,8 +74,7 @@ export const addPolicy = async ({
 	}
 };
 
-export const getActivePoliciyOf = async (userAddr) => {
-	console.log("User Address : ", userAddr);
+export const getActivePoliciyOf = async () => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			await requestAccount();
@@ -88,10 +87,15 @@ export const getActivePoliciyOf = async (userAddr) => {
 				signer
 			);
 
-			const policyId = await contract.getActivePoliciyOf(userAddr);
+			const userAddress = await signer.getAddress();
 
-			console.log(policyId);
-			return policyId;
+			const policyIds = await contract.getActivePoliciyOf(userAddress);
+
+			console.log(policyIds);
+			return {
+				success: true,
+				policyIds: policyIds,
+			};
 		} else {
 			return {
 				success: false,
@@ -122,6 +126,7 @@ export const getPolicy = async (policyId) => {
 
 			return {
 				success: true,
+				policyId: policyId,
 				data: policyData,
 			};
 		} else {

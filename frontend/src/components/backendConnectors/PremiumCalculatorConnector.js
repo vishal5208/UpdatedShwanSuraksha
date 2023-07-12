@@ -26,10 +26,6 @@ export const calculatePremium = async ({
 				signer
 			);
 
-			console.log("i'm in calculate premium");
-
-			console.log("in fniton : ");
-
 			let data = await contract.calculatePremium(
 				breed,
 				age,
