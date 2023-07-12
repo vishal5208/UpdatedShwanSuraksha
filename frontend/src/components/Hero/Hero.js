@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { heroImg } from "../../assets";
 
 const Hero = () => {
@@ -25,9 +26,12 @@ const Hero = () => {
 					expensive. ShwanSuraksha offers a variety of insurance plans to help
 					you protect your dog's health and your finances.
 				</p>
-				<button className="bg-blue-500 text-xl hover:bg-blue-600 text-white font-bold py-2 px-4 rounded inline-block w-1/4">
-					Get a Quote
-				</button>
+				<Link
+					to="/quoteForm"
+					className="bg-blue-500 text-xl hover:bg-blue-600 text-white font-bold py-2 px-4 rounded inline-block "
+				>
+					Get a personalized quote
+				</Link>
 			</div>
 		</div>
 	);
