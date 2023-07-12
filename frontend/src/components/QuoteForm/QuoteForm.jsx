@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { calculatePremium } from "../backendConnectors/PremiumCalculatorConnector";
+import { addPolicy } from "../backendConnectors/shwanSurkshaConnector";
 
 const QuoteForm = () => {
 	const [breed, setBreed] = useState("");
@@ -7,21 +9,36 @@ const QuoteForm = () => {
 	const [healthCondition, setHealthCondition] = useState("");
 	const [policyType, setPolicyType] = useState("");
 	const [showPolicyPrice, setShowPolicyPrice] = useState(false);
+	const [premium, setPremium] = useState(0);
+	const [isLoding, setIsLoading] = useState(false);
+	const [errorMsg, setErrorMsg] = useState("");
+	const [policyId, setPolicyId] = useState("");
+	const [petDetails, setPetDetails] = useState({
+		breed: "",
+		age: "",
+		region: "",
+		healthCondition: "",
+		policyType: "",
+	});
 
-	const handleSubmit = (event) => {
+	const handleSubmit = async (event) => {
 		event.preventDefault();
 
-		// Perform actions with the form data here
-		console.log("Form data:", {
-			breed,
-			age,
-			region,
-			healthCondition,
-			policyType,
-		});
+		const petDetailsData = {
+			breed: breed,
+			age: age,
+			region: region,
+			healthCondition: healthCondition,
+			policyType: policyType,
+		};
 
-		// Show the policy price
-		setShowPolicyPrice(true);
+		const data = await calculatePremium(petDetailsData);
+
+		if (data.success) {
+			setPremium(data.data);
+			// Show the policy price
+			setShowPolicyPrice(true);
+		}
 
 		// Reset form values
 		setBreed("");
@@ -29,11 +46,36 @@ const QuoteForm = () => {
 		setRegion("");
 		setHealthCondition("");
 		setPolicyType("");
+
+		// Set petDetails state using the existing state variable
+		setPetDetails((prevState) => ({
+			...prevState,
+			...petDetailsData,
+		}));
+	};
+
+	const handleAddPolicy = async () => {
+		setIsLoading(true);
+		setErrorMsg("");
+
+		console.log("petDetails : ", petDetails);
+
+		const policyResult = await addPolicy(petDetails);
+		setIsLoading(false);
+
+		if (policyResult.success) {
+			setPolicyId(policyResult.policyId);
+		}
+	};
+
+	const handleCopyBatchId = () => {
+		navigator.clipboard.writeText(policyId);
+		alert("Batch ID copied to clipboard!");
 	};
 
 	return (
-		<section className="flex justify-center items-center w-3/4 mx-auto space-x-9">
-			<div className="flex flex-col flex-wrap sm:space-y-7  w-1/3  font-GeneralSans p-4 my-4 border-2 border-gradient border-black rounded-lg">
+		<section className="flex justify-center items-center w-6/7 mx-auto space-x-9">
+			<div className="flex flex-col flex-wrap sm:space-y-7  w-1/4  font-GeneralSans p-4 my-4 border-2 border-gradient border-black rounded-lg">
 				<p className="text-center sm:text-4xl  text-2xl font-bold font-spaceGrotesk py-4">
 					Tell us about your pet.
 				</p>
@@ -162,13 +204,33 @@ const QuoteForm = () => {
 			</div>
 
 			{showPolicyPrice && (
-				<div className="w-1/3 bg-[#c5bbd4] p-4 rounded-lg flex justify-center items-center flex-col">
-					<p className="font-semibold text-2xl text-red-600 mb-4 leading-10">
-						Your Pet's Premium is $419.265 dollars.
-					</p>
-					<button className="uppercase text-white sm:text-2xl text-base font-semibold p-3 mt-2 rounded shadow bg-gradient-to-l  from-black to-purple-800 sm:py-2 ">
-						Add Policy
-					</button>
+				<div className="flex flex-col justify-center items-center space-x-4 space-y-5">
+					<div className="bg-[#c5bbd4] p-4 rounded-lg flex justify-center items-center flex-col space-y-4">
+						<p className="font-semibold text-2xl text-black mb-4 leading-10">
+							Your Pet's Premium is{" "}
+							<span className=" text-green-600">${premium}</span>.
+						</p>
+						<button
+							onClick={handleAddPolicy}
+							disabled={isLoding}
+							className="uppercase text-white sm:text-2xl text-base font-semibold p-3 mt-2 rounded shadow bg-gradient-to-l  from-black to-purple-800 sm:py-2 "
+						>
+							{isLoding ? "Adding Policy..." : "Add Policy"}
+						</button>
+					</div>
+					{policyId && (
+						<div className="flex gap-4 self-center items-center justify-center">
+							<span className="text-green-500 text-lg font-semibold">
+								POLICY ID: {policyId}
+							</span>
+							<button
+								className="bg-blue-600 hover:bg-blue-700 text-white rounded-md px-4 py-2 text-sm font-medium"
+								onClick={handleCopyBatchId}
+							>
+								Copy
+							</button>
+						</div>
+					)}
 				</div>
 			)}
 		</section>
