@@ -1,4 +1,4 @@
-import { LandingPage, QuotePage } from "./pages";
+import { LandingPage, QuotePage, ClaimPage } from "./pages";
 import { Route, Routes } from "react-router-dom";
 
 function App() {
@@ -7,6 +7,7 @@ function App() {
 			<Routes>
 				<Route path="/" element={<LandingPage />} />
 				<Route path="/quoteForm" element={<QuotePage />} />
+				<Route path="/claim" element={<ClaimPage />} />
 			</Routes>
 		</div>
 	);

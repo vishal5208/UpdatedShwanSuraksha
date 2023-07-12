@@ -17,9 +17,16 @@ const Header = () => {
 							Get a Quote
 						</Link>
 					</li>
-					<li className="text-white hover:text-gray-300 cursor-pointer">
-						Claim Policy
+
+					<li>
+						<Link
+							to="/claim"
+							className="text-white hover:text-gray-300 cursor-pointer"
+						>
+							Claim policy
+						</Link>
 					</li>
+
 					<li className="text-white hover:text-gray-300 cursor-pointer">
 						About
 					</li>
