@@ -10,14 +10,15 @@ export const getWalletBal = async (address) => {
 		if (typeof window.ethereum !== "undefined") {
 			await requestAccount();
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
+			const signer = provider.getSigner();
+			console.log({ signer });
 
 			const contract = new ethers.Contract(
 				usdcContractAddr,
 				usdcContractAbi,
-				provider
+				signer
 			);
 
-			const signer = provider.getSigner();
 			const bal = await contract.balanceOf(
 				address ? address : await signer.getAddress()
 			);

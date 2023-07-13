@@ -5,7 +5,6 @@ import {
 	decreaseAllowance,
 	approve,
 } from "../components/backendConnectors/usdcConnector";
-import { defineReadOnly } from "ethers/lib/utils";
 const contracts = require("../constants/contracts.json");
 const sixDecimal = 6;
 const ShwanSurkshaAddress = contracts.ShwanSurksha[1];

@@ -66,55 +66,55 @@ const Claim = () => {
 									key={policy.policyId}
 									className="p-4 text-lg border-2 border-solid border-neutral-900"
 								>
-									<p className="mb-2">
+									<p className="">
 										<span className="font-bold text-gray-800">Policy ID:</span>{" "}
 										{policy.policyId}
 									</p>
-									<p className="mb-2">
+									<p className="">
 										<span className="font-bold text-gray-800">Owner:</span>{" "}
 										{policy.owner}
 									</p>
-									<p className="mb-2">
+									<p className="">
 										<span className="font-bold text-gray-800">Premium:</span> $
 										{ethers.utils.formatUnits(policy.premium, 6)}
 									</p>
-									<p className="mb-2">
+									<p className="">
 										<span className="font-bold text-gray-800">Payout:</span> $
 										{ethers.utils.formatUnits(policy.payout, 6)}
 									</p>
-									<p className="mb-2">
+									<p className="">
 										<span className="font-bold text-gray-800">Start Date:</span>{" "}
 										{new Date(policy.startDate * 1000).toLocaleDateString()}
 									</p>
-									<p className="mb-2">
+									<p className="">
 										<span className="font-bold text-gray-800">End Date:</span>{" "}
 										{new Date(policy.endDate * 1000).toLocaleDateString()}
 									</p>
-									<p className="mb-2">
+									<p className="">
 										<span className="font-bold text-gray-800">Claimed:</span>{" "}
 										{policy.claimed.toString()}
 									</p>
-									<p className="mb-2">
+									<p className="">
 										<span className="font-bold text-gray-800">Breed:</span>{" "}
 										{policy.breed}
 									</p>
-									<p className="mb-2">
+									<p className="">
 										<span className="font-bold text-gray-800">
 											Age in Months:
 										</span>{" "}
 										{policy.ageInMonths}
 									</p>
-									<p className="mb-2">
+									<p className="">
 										<span className="font-bold text-gray-800">
 											Health Condition:
 										</span>{" "}
 										{policy.healthCondition}
 									</p>
-									<p className="mb-2">
+									<p className="">
 										<span className="font-bold text-gray-800">Region:</span>{" "}
 										{policy.region}
 									</p>
-									<p className="mb-2">
+									<p className="">
 										<span className="font-bold text-gray-800">
 											Policy Type:
 										</span>{" "}
