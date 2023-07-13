@@ -33,6 +33,7 @@ export const checkNetwork = async () => {
 		};
 	}
 };
+
 export const requestAccount = async (metaMask) => {
 	try {
 		if (typeof window.ethereum !== "undefined") {

@@ -221,22 +221,22 @@ export const getPolicy = async (policyId) => {
 	}
 };
 
-export const claimPolicy = async (policyId) => {
-	console.log(policyId, "policyId");
+export const confirmClaim = async (policyId) => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			await requestAccount();
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
 			const signer = provider.getSigner();
-			console.log({ signer });
+
 			const contract = new ethers.Contract(
 				shwanSurkshaAddress,
 				shwanSurkshaAbi,
 				signer
 			);
-			const transaction = await contract.claimPolicy(policyId);
-			console.log(transaction);
-			await transaction.wait(); // Wait for transaction to be mined
+
+			const tx = await contract.claimPolicy(policyId);
+			await tx.wait();
+
 			return true;
 		} else {
 			return false;

@@ -60,66 +60,81 @@ const Claim = () => {
 						Active Policies
 					</h2>
 					{policyData.length > 0 ? (
-						<div className="grid grid-cols-2 gap-4">
+						<div className="grid grid-cols-2 gap-4 space-y-4">
 							{policyData.map((policy) => (
 								<div
 									key={policy.policyId}
-									className="p-4 text-lg border-2 border-solid border-neutral-900"
+									className=" flex flex-col p-3  text-lg border-2 border-solid border-neutral-900"
 								>
-									<p className="">
+									<p>
 										<span className="font-bold text-gray-800">Policy ID:</span>{" "}
 										{policy.policyId}
 									</p>
-									<p className="">
+									<p>
 										<span className="font-bold text-gray-800">Owner:</span>{" "}
 										{policy.owner}
 									</p>
-									<p className="">
-										<span className="font-bold text-gray-800">Premium:</span> $
-										{ethers.utils.formatUnits(policy.premium, 6)}
-									</p>
-									<p className="">
-										<span className="font-bold text-gray-800">Payout:</span> $
-										{ethers.utils.formatUnits(policy.payout, 6)}
-									</p>
-									<p className="">
-										<span className="font-bold text-gray-800">Start Date:</span>{" "}
-										{new Date(policy.startDate * 1000).toLocaleDateString()}
-									</p>
-									<p className="">
-										<span className="font-bold text-gray-800">End Date:</span>{" "}
-										{new Date(policy.endDate * 1000).toLocaleDateString()}
-									</p>
-									<p className="">
-										<span className="font-bold text-gray-800">Claimed:</span>{" "}
-										{policy.claimed.toString()}
-									</p>
-									<p className="">
-										<span className="font-bold text-gray-800">Breed:</span>{" "}
-										{policy.breed}
-									</p>
-									<p className="">
-										<span className="font-bold text-gray-800">
-											Age in Months:
-										</span>{" "}
-										{policy.ageInMonths}
-									</p>
-									<p className="">
-										<span className="font-bold text-gray-800">
-											Health Condition:
-										</span>{" "}
-										{policy.healthCondition}
-									</p>
-									<p className="">
-										<span className="font-bold text-gray-800">Region:</span>{" "}
-										{policy.region}
-									</p>
-									<p className="">
-										<span className="font-bold text-gray-800">
-											Policy Type:
-										</span>{" "}
-										{policy.policyType}
-									</p>
+
+									<div className="flex justify-between  items-center w-3/4 mx-auto">
+										<p>
+											<span className="font-bold text-gray-800">Premium:</span>$
+											{ethers.utils.formatUnits(policy.premium, 6)}
+										</p>
+										<p>
+											<span className="font-bold text-gray-800">Payout:</span> $
+											{ethers.utils.formatUnits(policy.payout, 6)}
+										</p>
+									</div>
+
+									<div className="flex justify-between  items-center w-3/4 mx-auto">
+										<p>
+											<span className="font-bold text-gray-800">
+												Start Date:
+											</span>{" "}
+											{new Date(policy.startDate * 1000).toLocaleDateString()}
+										</p>
+										<p>
+											<span className="font-bold text-gray-800">End Date:</span>{" "}
+											{new Date(policy.endDate * 1000).toLocaleDateString()}
+										</p>
+									</div>
+
+									<div className="flex flex-col justify-between  items-center w-3/4 mx-auto">
+										<p>
+											<span className="font-bold text-gray-800">Claimed:</span>
+											{policy.claimed.toString()}
+										</p>
+										<p>
+											<span className="font-bold text-gray-800">Breed:</span>
+											{policy.breed}
+										</p>
+										<p>
+											<span className="font-bold text-gray-800">
+												Age in Months:
+											</span>{" "}
+											{policy.ageInMonths}
+										</p>
+										<p>
+											<span className="font-bold text-gray-800">
+												Health Condition:
+											</span>{" "}
+											{policy.healthCondition}
+										</p>
+										<p>
+											<span className="font-bold text-gray-800">Region:</span>{" "}
+											{policy.region}
+										</p>
+										<p>
+											<span className="font-bold text-gray-800">
+												Policy Type:
+											</span>{" "}
+											{policy.policyType}
+										</p>
+									</div>
+
+									<button className=" self-center text-center text-white w-1/4   sm:text-2xl text-base font-semibold p-3 mt-2 rounded shadow bg-gradient-to-l  from-black to-purple-800 sm:py-2 ">
+										Confirm claim
+									</button>
 								</div>
 							))}
 						</div>
