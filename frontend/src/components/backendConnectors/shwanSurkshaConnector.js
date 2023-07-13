@@ -1,4 +1,3 @@
-import { useCallback, useContext } from "react";
 import { calculatePremium } from "./PremiumCalculatorConnector";
 import {
 	getAllowance,
