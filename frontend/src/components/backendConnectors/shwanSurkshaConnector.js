@@ -1,6 +1,10 @@
 import { useCallback, useContext } from "react";
 import { calculatePremium } from "./PremiumCalculatorConnector";
-
+import {
+	getAllowance,
+	decreaseAllowance,
+	increaseAllowance,
+} from "./usdcConnector";
 const { ethers, errors } = require("ethers");
 const { requestAccount } = require("./commonConnectors");
 const contracts = require("../../constants/contracts.json");
@@ -29,7 +33,6 @@ export const addPolicy = async ({
 			await requestAccount();
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
 			const signer = provider.getSigner();
-			console.log({ signer });
 
 			// shwansurksha contract
 			const contract = new ethers.Contract(
@@ -37,15 +40,6 @@ export const addPolicy = async ({
 				shwanSurkshaAbi,
 				signer
 			);
-
-			// usdc contract
-			const usdcContract = new ethers.Contract(
-				usdcContractAddress,
-				usdcTokenAbi,
-				signer
-			);
-
-			console.log("USDC : ", usdcContract);
 
 			//  const startDate = new Date();
 			const startDate = new Date(Date.now() + 2 * 60 * 1000); // Set start date to 2 minutes ahead of the current time
@@ -64,9 +58,9 @@ export const addPolicy = async ({
 				policyType,
 			});
 
-			const premimum = result.success ? result.data : null;
+			const premium = result.success ? result.data : null;
 
-			if (!premimum) {
+			if (!premium) {
 				console.log(result.msg);
 				return {
 					success: false,
@@ -74,17 +68,52 @@ export const addPolicy = async ({
 				};
 			}
 
-			// Convert premimum to BigNumber
-			const premimumBigNumber = ethers.utils.parseUnits(premimum.toString(), 6);
-
-			console.log("premium : ", premimumBigNumber);
-
 			try {
-				const approveTx = await usdcContract.approve(
-					shwanSurkshaAddress,
-					premimumBigNumber
-				);
-				await approveTx.wait();
+				const allowanceResult = await getAllowance(shwanSurkshaAddress);
+
+				if (allowanceResult.success) {
+					const premiumBigNumber = ethers.BigNumber.from(
+						premium.toString() * 10 ** 6
+					);
+					const allowanceBigNumber = ethers.BigNumber.from(
+						allowanceResult.allowance.toString()
+					);
+
+					const remaining = premiumBigNumber.sub(allowanceBigNumber).toString();
+
+					console.log(remaining);
+
+					console.log("formated : ", remaining);
+
+					if (remaining > 0) {
+						const increaseAllowanceRes = await increaseAllowance(
+							shwanSurkshaAddress,
+							remaining
+						);
+
+						if (!increaseAllowanceRes.success) {
+							console.log(increaseAllowanceRes.msg);
+						}
+					} else if (remaining < 0) {
+						console.log("HI");
+						const absRemaining = Math.abs(remaining);
+						console.log("abs remaning : ", absRemaining);
+
+						const decreaseAllowanceRes = await decreaseAllowance(
+							shwanSurkshaAddress,
+							absRemaining
+						);
+
+						console.log(decreaseAllowanceRes);
+
+						if (!decreaseAllowanceRes.success) {
+							console.log(decreaseAllowanceRes.msg);
+						}
+					}
+					console.log("premium : ", premiumBigNumber);
+					console.log("allownce : ", allowanceBigNumber.toString());
+					console.log("remaing : ", remaining);
+				}
 			} catch (error) {
 				console.log(error.message);
 			}

@@ -1,8 +1,4 @@
 const { ethers } = require("ethers");
-const contracts = require("../../constants/contracts.json");
-const usdcContractAddr = contracts.USDCToken[1];
-const usdcContractAbi = contracts.USDCToken[0];
-const sixDecimals = 6;
 
 export const getEthAddress = async () => {
 	try {
@@ -46,7 +42,7 @@ export const requestAccount = async (metaMask) => {
 				window.ethereum.providers.forEach(async (p) => {
 					if (metaMask === true) {
 						if (p.isMetaMask) provider = p;
-					} else {
+					} else {	
 						if (p.isCoinbaseWallet) {
 							provider = p;
 						}
@@ -117,40 +113,6 @@ export const getUserWalletAddress = async () => {
 			const signer = provider.getSigner();
 			const address = await signer.getAddress();
 			return { address, success: true };
-		} else {
-			return {
-				success: false,
-				msg: "Please connect your wallet!",
-			};
-		}
-	} catch (error) {
-		return {
-			success: false,
-			msg: error.message,
-		};
-	}
-};
-
-export const getWalletBal = async (address) => {
-	try {
-		if (typeof window.ethereum !== "undefined") {
-			await requestAccount();
-			const provider = new ethers.providers.Web3Provider(window.ethereum);
-			// console.log({ provider });
-
-			const contract = new ethers.Contract(
-				usdcContractAddr,
-				usdcContractAbi,
-				provider
-			);
-			const signer = provider.getSigner();
-			const bal = await contract.balanceOf(
-				address ? address : await signer.getAddress()
-			);
-			return {
-				balance: ethers.utils.formatUnits(bal, sixDecimals),
-				success: true,
-			};
 		} else {
 			return {
 				success: false,
