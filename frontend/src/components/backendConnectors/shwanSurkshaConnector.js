@@ -80,10 +80,6 @@ export const addPolicy = async ({
 
 					const remaining = premiumBigNumber.sub(allowanceBigNumber).toString();
 
-					console.log(remaining);
-
-					console.log("formated : ", remaining);
-
 					if (remaining > 0) {
 						const increaseAllowanceRes = await increaseAllowance(
 							shwanSurkshaAddress,
@@ -168,7 +164,7 @@ export const getActivePoliciyOf = async () => {
 
 			const policyIds = await contract.getActivePoliciyOf(userAddress);
 
-			console.log(policyIds);
+			// console.log(policyIds);
 			return {
 				success: true,
 				policyIds: policyIds,
@@ -258,7 +254,7 @@ export const cancelPolicy = async (policyId) => {
 				signer
 			);
 
-			const receipt = await contract.cancelPolicy(policyId);
+			// const receipt = await contract.cancelPolicy(policyId);
 
 			const filter = contract.filters.PolicyCancelled();
 			contract.on(filter, (policyId, owner) => {

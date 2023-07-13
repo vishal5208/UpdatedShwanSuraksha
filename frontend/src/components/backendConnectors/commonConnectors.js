@@ -7,6 +7,7 @@ export const getEthAddress = async () => {
 		await provider.send("eth_requestAccounts", []);
 		const signer = provider.getSigner();
 		const result = await signer.getAddress();
+		console.log("accounts : ", result);
 		return { result, success: true };
 	} catch (error) {
 		return {
@@ -43,7 +44,7 @@ export const requestAccount = async (metaMask) => {
 				window.ethereum.providers.forEach(async (p) => {
 					if (metaMask === true) {
 						if (p.isMetaMask) provider = p;
-					} else {	
+					} else {
 						if (p.isCoinbaseWallet) {
 							provider = p;
 						}
