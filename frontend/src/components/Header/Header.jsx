@@ -2,15 +2,12 @@ import { Link } from "react-router-dom";
 import { Wallet } from "../Wallet/Wallet";
 
 const Header = () => {
-	let provider = window.ethereum;
 	//change address
-	provider.on("accountsChanged", (accounts) => window.location.reload());
+	// provider.on("accountsChanged", (accounts) => window.location.reload());
 	//chain change
-	provider.on("chainChanged", (_chainId) => {
+	window.ethereum.on("chainChanged", (_chainId) => {
 		window.location.reload();
 	});
-
-
 
 	return (
 		<header className="bg-gray-900 text-lg">

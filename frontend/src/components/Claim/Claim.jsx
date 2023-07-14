@@ -6,17 +6,37 @@ import { ethers } from "ethers";
 const Claim = () => {
 	const [activePolicy, setActivePolicy] = useState([]);
 	const [policyData, setPolicyData] = useState([]);
+	const [account, setAccount] = useState(null);
+	const [policyDetailsFetching, setPolicyDetailsFetching] = useState(false);
 
 	useEffect(() => {
 		const fetchData = async () => {
+			setPolicyDetailsFetching(true);
 			const result = await getActivePoliciyOf();
 
 			if (result.success) {
 				setActivePolicy(result.policyIds);
 			}
+
+			setPolicyDetailsFetching(false);
 		};
 
 		fetchData();
+	}, [account]);
+
+	useEffect(() => {
+		const handleAccountsChanged = (accounts) => {
+			// console.log(accounts);
+			setAccount(accounts[0]);
+		};
+
+		// Add event listener for 'accountsChanged'
+		window.ethereum.on("accountsChanged", handleAccountsChanged);
+
+		// Cleanup: Remove event listener when component unmounts
+		return () => {
+			window.ethereum.removeListener("accountsChanged", handleAccountsChanged);
+		};
 	}, []);
 
 	useEffect(() => {
@@ -55,11 +75,11 @@ const Claim = () => {
 	return (
 		<section className="container mx-auto  py-8">
 			<div className="flex justify-center">
-				<div className="flex flex-col space-y-9 bg-white rounded shadow">
+				<div className="flex flex-col space-y-9 bg-white ">
 					<h2 className="text-3xl font-bold text-center mt-4">
 						Active Policies
 					</h2>
-					{policyData.length > 0 ? (
+					{policyData.length > 0 && !policyDetailsFetching ? (
 						<div className="grid grid-cols-2 gap-4 p-4 uppercase">
 							{policyData.map((policy) => (
 								<div
@@ -140,7 +160,19 @@ const Claim = () => {
 							))}
 						</div>
 					) : (
-						<p className="text-center p-4">No active policies found.</p>
+						<div>
+							{policyData.length === 0 && (
+								<p className="text-center text-xl font-semibold text-black p-4">
+									No active policies found.
+								</p>
+							)}
+
+							{policyDetailsFetching && (
+								<div className="text-xl font-semibold text-black">
+									Fetching policy details... Please wait a moment.
+								</div>
+							)}
+						</div>
 					)}
 				</div>
 			</div>
