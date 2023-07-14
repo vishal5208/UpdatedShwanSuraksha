@@ -1,18 +1,19 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import {
 	confirmClaim,
 	getActivePoliciyOf,
 } from "../backendConnectors/shwanSurkshaConnector";
 import { getPolicy } from "../backendConnectors/shwanSurkshaConnector";
 import { ethers } from "ethers";
+import QRCodeModal from "./QRCodeModal";
 
 const Claim = () => {
 	const [activePolicy, setActivePolicy] = useState([]);
 	const [policyData, setPolicyData] = useState([]);
 	const [account, setAccount] = useState(null);
-
 	const [policyDetailsFetching, setPolicyDetailsFetching] = useState(false);
-
+	const [showQRCodeModal, setShowQRCodeModall] = useState(false);
 	// keep track of confirmed polices
 	const [confirmedPolicies, setConfirmedPolicies] = useState(() => {
 		const storedPolicies = localStorage.getItem("confirmedPolicies");
@@ -104,6 +105,14 @@ const Claim = () => {
 		}
 	};
 
+	const handleOpenQRCodeModal = () => {
+		setShowQRCodeModall(true);
+	};
+
+	const handleCloseQRCodeModal = () => {
+		setShowQRCodeModall(false);
+	};
+
 	return (
 		<section className="container mx-auto  py-8">
 			<div className="flex justify-center">
@@ -185,17 +194,41 @@ const Claim = () => {
 										</p>
 									</div>
 
-									<button
-										onClick={() => handleConfirmClaim(policy.policyId)}
-										disabled={confirmedPolicies.includes(policy.policyId)}
-										className={`self-center text-center text-white w-1/3 sm:text-2xl text-base font-semibold p-3 mt-2 rounded shadow bg-gradient-to-l from-black to-purple-800 sm:py-2 ${
-											confirmedPolicies.includes(policy.policyId)
-												? "pointer-events-none opacity-50 cursor-not-allowed"
-												: ""
-										}`}
-									>
-										Confirm a claim
-									</button>
+									<div className="flex items-center justify-center space-x-8">
+										<button
+											onClick={() => {
+												if (!confirmedPolicies.includes(policy.policyId)) {
+													handleConfirmClaim(policy.policyId);
+												}
+											}}
+											// disabled={confirmedPolicies.includes(policy.policyId)}
+											className={`${
+												confirmedPolicies.includes(policy.policyId)
+													? "self-center uppercase text-center text-white w-1/3 sm:text-2xl text-base font-semibold p-3 mt-2 rounded shadow bg-gradient-to-l from-black to-teal-800 sm:py-2"
+													: "self-center uppercase text-center text-white w-1/3 sm:text-2xl text-base font-semibold p-3 mt-2 rounded shadow bg-gradient-to-l from-black to-purple-800 sm:py-2"
+											}`}
+										>
+											{confirmedPolicies.includes(policy.policyId) ? (
+												<Link
+													to="https://platform-test.polygonid.com/claim-link/cd9902a8-c4fb-4d1f-8b36-3e68f38f4487"
+													target="_blank"
+													className="text-white"
+												>
+													Claim Now
+												</Link>
+											) : (
+												"Confirm a claim"
+											)}
+										</button>
+										{confirmedPolicies.includes(policy.policyId) && (
+											<button
+												onClick={handleOpenQRCodeModal}
+												className="self-center uppercase text-center text-white w-1/3 sm:text-2xl text-base font-semibold p-3 mt-2 rounded shadow bg-gradient-to-l from-black to-teal-800 sm:py-2"
+											>
+												Verify Claim
+											</button>
+										)}
+									</div>
 								</div>
 							))}
 						</div>
@@ -215,6 +248,8 @@ const Claim = () => {
 						</div>
 					)}
 				</div>
+
+				{showQRCodeModal && <QRCodeModal onClose={handleCloseQRCodeModal} />}
 			</div>
 		</section>
 	);
