@@ -10,7 +10,7 @@ const Claim = () => {
 	const [activePolicy, setActivePolicy] = useState([]);
 	const [policyData, setPolicyData] = useState([]);
 	const [account, setAccount] = useState(null);
-	const [confirmingClaim, setConfirmingClaim] = useState(false); // to be added
+
 	const [policyDetailsFetching, setPolicyDetailsFetching] = useState(false);
 
 	// keep track of confirmed polices
@@ -194,7 +194,7 @@ const Claim = () => {
 												: ""
 										}`}
 									>
-										{confirmingClaim ? "Confirming a claim" : "Confirm a claim"}
+										Confirm a claim
 									</button>
 								</div>
 							))}
