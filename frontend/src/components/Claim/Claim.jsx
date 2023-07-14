@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
-import { getActivePoliciyOf } from "../backendConnectors/shwanSurkshaConnector";
+import {
+	confirmClaim,
+	getActivePoliciyOf,
+} from "../backendConnectors/shwanSurkshaConnector";
 import { getPolicy } from "../backendConnectors/shwanSurkshaConnector";
 import { ethers } from "ethers";
 
@@ -8,6 +11,9 @@ const Claim = () => {
 	const [policyData, setPolicyData] = useState([]);
 	const [account, setAccount] = useState(null);
 	const [policyDetailsFetching, setPolicyDetailsFetching] = useState(false);
+
+	// keep track of confirmed polices
+	const [confirmedPolicies, setConfirmedPolicies] = useState([]);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -71,6 +77,20 @@ const Claim = () => {
 
 		fetchPolicyData();
 	}, [activePolicy]);
+
+	const handleConfirmClaim = async (policyId) => {
+		const result = await confirmClaim(policyId);
+
+		if (result) {
+			// confirmedPolices as previous state and appends policyId to it
+			setConfirmedPolicies((confirmedPolicies) => [
+				...confirmedPolicies,
+				policyId,
+			]);
+		} else {
+			console.log("Confirmation failed");
+		}
+	};
 
 	return (
 		<section className="container mx-auto  py-8">
@@ -153,20 +173,27 @@ const Claim = () => {
 										</p>
 									</div>
 
-									<button className=" self-center text-center text-white w-1/4   sm:text-2xl text-base font-semibold p-3 mt-2 rounded shadow bg-gradient-to-l  from-black to-purple-800 sm:py-2 ">
-										Confirm claim
+									<button
+										onClick={() => handleConfirmClaim(policy.policyId)}
+										disabled={confirmedPolicies.includes(policy.policyId)}
+										className={`self-center text-center text-white w-1/3 sm:text-2xl text-base font-semibold p-3 mt-2 rounded shadow bg-gradient-to-l from-black to-purple-800 sm:py-2 ${
+											confirmedPolicies.includes(policy.policyId)
+												? "pointer-events-none opacity-50 cursor-not-allowed"
+												: ""
+										}`}
+									>
+										Confirm a claim
 									</button>
 								</div>
 							))}
 						</div>
 					) : (
 						<div>
-							{policyData.length === 0 &&
-								!policyDetailsFetching(
-									<p className="text-center text-xl font-semibold text-black p-4">
-										No active policies found.
-									</p>
-								)}
+							{policyData.length === 0 && !policyDetailsFetching && (
+								<p className="text-center text-xl font-semibold text-black p-4">
+									No active policies found.
+								</p>
+							)}
 
 							{policyDetailsFetching && (
 								<div className="text-xl font-semibold text-black">

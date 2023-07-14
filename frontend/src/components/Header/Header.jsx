@@ -2,9 +2,7 @@ import { Link } from "react-router-dom";
 import { Wallet } from "../Wallet/Wallet";
 
 const Header = () => {
-	//change address
-	// provider.on("accountsChanged", (accounts) => window.location.reload());
-	//chain change
+	// reload when chain is changed
 	window.ethereum.on("chainChanged", (_chainId) => {
 		window.location.reload();
 	});
