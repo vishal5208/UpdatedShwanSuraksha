@@ -161,11 +161,12 @@ const Claim = () => {
 						</div>
 					) : (
 						<div>
-							{policyData.length === 0 && (
-								<p className="text-center text-xl font-semibold text-black p-4">
-									No active policies found.
-								</p>
-							)}
+							{policyData.length === 0 &&
+								!policyDetailsFetching(
+									<p className="text-center text-xl font-semibold text-black p-4">
+										No active policies found.
+									</p>
+								)}
 
 							{policyDetailsFetching && (
 								<div className="text-xl font-semibold text-black">
