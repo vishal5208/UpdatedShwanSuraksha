@@ -7,7 +7,7 @@ interface IShwanSurksha {
 
     function getPolicyToBeClaimed(
         address policyHolder
-    ) external view returns (bytes32);
+    ) external view returns (bytes32[] memory);
 
     function fulfilThePolicyClaim(bytes32 policyId) external returns (bool);
 }

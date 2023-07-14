@@ -26,7 +26,7 @@ contract ShwanSurksha {
     mapping(bytes32 => Policy) policy;
     mapping(address => bytes32[]) public policyHolderToIDs;
     mapping(address => mapping(bytes32 => bool)) private isClaimable;
-    mapping(address => bytes32) private policyHolderToClaimId;
+    mapping(address => bytes32[]) private policyHolderToClaimId;
 
     // Events to emit when policies are added and claimed
     event PolicyAdded(
@@ -200,7 +200,7 @@ contract ShwanSurksha {
 
     // first set which policy you want to claim
     function claimPolicy(bytes32 policyId) external {
-        policyHolderToClaimId[msg.sender] = policyId;
+        policyHolderToClaimId[msg.sender].push(policyId);
     }
 
     // cancelPolicy
@@ -319,7 +319,7 @@ contract ShwanSurksha {
 
     function getPolicyToBeClaimed(
         address policyHolder
-    ) external view returns (bytes32) {
+    ) external view returns (bytes32[] memory) {
         require(policyHolder != address(0), "Invalid policyHolder address");
         return policyHolderToClaimId[policyHolder];
     }

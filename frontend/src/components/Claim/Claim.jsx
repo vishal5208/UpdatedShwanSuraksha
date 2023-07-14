@@ -10,10 +10,14 @@ const Claim = () => {
 	const [activePolicy, setActivePolicy] = useState([]);
 	const [policyData, setPolicyData] = useState([]);
 	const [account, setAccount] = useState(null);
+	const [confirmingClaim, setConfirmingClaim] = useState(false); // to be added
 	const [policyDetailsFetching, setPolicyDetailsFetching] = useState(false);
 
 	// keep track of confirmed polices
-	const [confirmedPolicies, setConfirmedPolicies] = useState([]);
+	const [confirmedPolicies, setConfirmedPolicies] = useState(() => {
+		const storedPolicies = localStorage.getItem("confirmedPolicies");
+		return storedPolicies ? JSON.parse(storedPolicies) : [];
+	});
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -77,6 +81,14 @@ const Claim = () => {
 
 		fetchPolicyData();
 	}, [activePolicy]);
+
+	// to stored confirmed policies in browser
+	useEffect(() => {
+		localStorage.setItem(
+			"confirmedPolicies",
+			JSON.stringify(confirmedPolicies)
+		);
+	}, [confirmedPolicies]);
 
 	const handleConfirmClaim = async (policyId) => {
 		const result = await confirmClaim(policyId);
@@ -182,7 +194,7 @@ const Claim = () => {
 												: ""
 										}`}
 									>
-										Confirm a claim
+										{confirmingClaim ? "Confirming a claim" : "Confirm a claim"}
 									</button>
 								</div>
 							))}

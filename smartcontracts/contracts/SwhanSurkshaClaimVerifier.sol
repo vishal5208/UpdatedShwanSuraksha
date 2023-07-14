@@ -60,15 +60,22 @@ contract SwhanSurkshaClaimVerifier is ZKPVerifier {
         uint256[] memory /* inputs*/,
         ICircuitValidator /* validator */
     ) internal override whenPaused {
-        bytes32 policyId = shwanSurksha.getPolicyToBeClaimed(_msgSender());
-        if (!isClaimed[policyId]) {
-            shwanSurksha.setIsClaimable(_msgSender(), policyId);
-            // now cliaim the function
-            bool success = shwanSurksha.fulfilThePolicyClaim(policyId);
-            if (!success) {
-                emit ClaimFailed(_msgSender(), policyId);
-            } else {
-                isClaimed[policyId] = true;
+        bytes32[] memory policyIds = shwanSurksha.getPolicyToBeClaimed(
+            _msgSender()
+        );
+
+        for (uint i = 0; i < policyIds.length; i++) {
+            bytes32 policyId = policyIds[i];
+            
+            if (!isClaimed[policyId]) {
+                shwanSurksha.setIsClaimable(_msgSender(), policyId);
+                // now cliaim the function
+                bool success = shwanSurksha.fulfilThePolicyClaim(policyId);
+                if (!success) {
+                    emit ClaimFailed(_msgSender(), policyId);
+                } else {
+                    isClaimed[policyId] = true;
+                }
             }
         }
 
