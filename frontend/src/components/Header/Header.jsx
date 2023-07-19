@@ -2,10 +2,24 @@ import { Link } from "react-router-dom";
 import { Wallet } from "../Wallet/Wallet";
 
 const Header = () => {
-	// reload when chain is changed
-	window.ethereum.on("chainChanged", (_chainId) => {
-		window.location.reload();
-	});
+	try {
+		if (typeof window.ethereum !== "undefined") {
+			// reload when chain is changed
+			window.ethereum.on("chainChanged", (_chainId) => {
+				window.location.reload();
+			});
+		} else {
+			return {
+				success: false,
+				msg: "Please connect your wallet!",
+			};
+		}
+	} catch (error) {
+		return {
+			success: false,
+			msg: error.message,
+		};
+	}
 
 	return (
 		<header className="bg-gray-900 text-lg">
