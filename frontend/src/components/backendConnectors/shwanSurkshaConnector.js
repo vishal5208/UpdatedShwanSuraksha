@@ -115,16 +115,19 @@ export const addPolicy = async ({
 				console.log(error.message);
 			}
 
+			console.log("adding policy");
 			const addPolicyTx = await contract.addPolicy(
 				breed,
 				age,
-				region,
 				healthCondition,
+				region,
 				policyType,
 				startTimestamp.toString(),
 				endTimestamp.toString(),
 				ipfsHash
 			);
+
+			console.log("metamsak khula hoag?");
 
 			const addPolicyRec = await addPolicyTx.wait();
 			const { args } = addPolicyRec.events.find(

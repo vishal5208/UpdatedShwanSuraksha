@@ -27,7 +27,7 @@ const QuoteForm = () => {
 
 	// ifps
 	const [files, setFiles] = useState([]);
-	const [cid, setCid] = useState(null);
+	const [cid, setCid] = useState("");
 
 	const handleQuoteSubmit = async (event) => {
 		event.preventDefault();
@@ -72,7 +72,12 @@ const QuoteForm = () => {
 		try {
 			const cid = await client.put(files);
 			console.log("cid: ", cid);
-			setCid(cid);
+
+			setPetDetails((prevPetDetails) => ({
+				...prevPetDetails,
+				ipfsHash: cid,
+			}));
+
 			// File submission was successful, handle the result as needed
 		} catch (error) {
 			console.error("Error submitting files:", error);

@@ -12,7 +12,7 @@ async function main() {
 	await premimumCalculator.deployed();
 
 	// inititalze premimiumCalculator
-	await premimumCalculator.initialize("300000000", "10", "90");
+	await premimumCalculator.initialize("100000000", "5", "190");
 
 	// usdcToken
 	const USDCToken = await hre.ethers.getContractFactory("USDCToken");
@@ -69,7 +69,7 @@ async function main() {
 			shwanSurkshaAbi,
 			swhanSurkshaClaimVerifier.address,
 		],
-		uSDCToken: [usdcTokenAbi, uSDCToken.address],
+		USDCToken: [usdcTokenAbi, uSDCToken.address],
 	};
 
 	fs.writeFileSync(

@@ -35,7 +35,8 @@ contract ShwanSurksha {
         uint256 premium,
         uint256 payout,
         uint256 startDate,
-        uint256 endDate
+        uint256 endDate,
+        string ipfsHash
     );
     event PolicyClaimed(
         bytes32 indexed policyId,
@@ -158,7 +159,8 @@ contract ShwanSurksha {
             premium,
             payout,
             startDate,
-            endDate
+            endDate,
+            _ipfsHash
         );
     }
 

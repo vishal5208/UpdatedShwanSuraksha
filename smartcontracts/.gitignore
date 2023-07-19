@@ -6,7 +6,7 @@ coverage
 coverage.json
 typechain
 typechain-types
-
+todolist.txt
 # Hardhat files
 cache
 artifacts
