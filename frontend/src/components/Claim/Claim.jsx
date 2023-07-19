@@ -3,10 +3,12 @@ import { Link } from "react-router-dom";
 import {
 	confirmClaim,
 	getActivePoliciyOf,
+	getPolicy,
 } from "../backendConnectors/shwanSurkshaConnector";
-import { getPolicy } from "../backendConnectors/shwanSurkshaConnector";
 import { ethers } from "ethers";
+import { Web3Storage } from "web3.storage";
 import QRCodeModal from "./QRCodeModal";
+const token = process.env.REACT_APP_WEB3_TOKEN;
 
 const Claim = () => {
 	const [activePolicy, setActivePolicy] = useState([]);
@@ -14,7 +16,6 @@ const Claim = () => {
 	const [account, setAccount] = useState(null);
 	const [policyDetailsFetching, setPolicyDetailsFetching] = useState(false);
 	const [showQRCodeModal, setShowQRCodeModall] = useState(false);
-	// keep track of confirmed polices
 	const [confirmedPolicies, setConfirmedPolicies] = useState(() => {
 		const storedPolicies = localStorage.getItem("confirmedPolicies");
 		return storedPolicies ? JSON.parse(storedPolicies) : [];
@@ -37,14 +38,11 @@ const Claim = () => {
 
 	useEffect(() => {
 		const handleAccountsChanged = (accounts) => {
-			// console.log(accounts);
 			setAccount(accounts[0]);
 		};
 
-		// Add event listener for 'accountsChanged'
 		window.ethereum.on("accountsChanged", handleAccountsChanged);
 
-		// Cleanup: Remove event listener when component unmounts
 		return () => {
 			window.ethereum.removeListener("accountsChanged", handleAccountsChanged);
 		};
@@ -58,20 +56,28 @@ const Claim = () => {
 				const data = await getPolicy(policyId);
 
 				if (data.success) {
+					const ipfsHash = data.data[11];
+
+					const client = new Web3Storage({ token: token });
+					const cid = ipfsHash.replace("ipfs://", "");
+					const response = await client.get(cid);
+					const files = await response.files();
+					const image = URL.createObjectURL(files[0]);
+
 					const policyData = {
 						policyId: policyId,
 						owner: data.data[0],
-						premium: data.data[1].toString(), // Convert BigNumber to string
-						payout: data.data[2].toString(), // Convert BigNumber to string
-						startDate: data.data[3].toString(), // Convert BigNumber to string
-						endDate: data.data[4].toString(), // Convert BigNumber to string
+						premium: data.data[1].toString(),
+						payout: data.data[2].toString(),
+						startDate: data.data[3].toString(),
+						endDate: data.data[4].toString(),
 						claimed: data.data[5],
 						breed: data.data[6],
-						ageInMonths: data.data[7].toString(), // Convert BigNumber to string
+						ageInMonths: data.data[7].toString(),
 						region: data.data[8],
 						healthCondition: data.data[9],
 						policyType: data.data[10],
-						ipfsHash: data.data[11],
+						ipfsHash: image,
 					};
 
 					updatedPolicyData.push(policyData);
@@ -84,7 +90,6 @@ const Claim = () => {
 		fetchPolicyData();
 	}, [activePolicy]);
 
-	// to stored confirmed policies in browser
 	useEffect(() => {
 		localStorage.setItem(
 			"confirmedPolicies",
@@ -96,7 +101,6 @@ const Claim = () => {
 		const result = await confirmClaim(policyId);
 
 		if (result) {
-			// confirmedPolices as previous state and appends policyId to it
 			setConfirmedPolicies((confirmedPolicies) => [
 				...confirmedPolicies,
 				policyId,
@@ -126,7 +130,7 @@ const Claim = () => {
 							{policyData.map((policy) => (
 								<div
 									key={policy.policyId}
-									className=" flex flex-col p-2  text-lg border-2 border-solid border-neutral-900"
+									className="flex flex-col p-2 text-lg border-2 border-solid border-neutral-900"
 								>
 									<p>
 										<span className="font-bold text-gray-800">Policy ID:</span>{" "}
@@ -138,7 +142,7 @@ const Claim = () => {
 										{policy.owner}
 									</p>
 
-									<div className="flex justify-between  items-center w-3/4 mx-auto">
+									<div className="flex justify-between items-center w-3/4 mx-auto">
 										<p>
 											<span className="font-bold text-gray-800">Premium:</span>{" "}
 											${ethers.utils.formatUnits(policy.premium, 6)}
@@ -149,7 +153,7 @@ const Claim = () => {
 										</p>
 									</div>
 
-									<div className="flex justify-between  items-center w-3/4 mx-auto">
+									<div className="flex justify-between items-center w-3/4 mx-auto">
 										<p>
 											<span className="font-bold text-gray-800">
 												Start Date:
@@ -162,7 +166,7 @@ const Claim = () => {
 										</p>
 									</div>
 
-									<div className="flex flex-col justify-between  items-center w-3/4 mx-auto">
+									<div className="flex flex-col justify-between items-center w-3/4 mx-auto">
 										<p>
 											<span className="font-bold text-gray-800">Claimed:</span>{" "}
 											{policy.claimed ? "YES" : "NO"}
@@ -193,12 +197,14 @@ const Claim = () => {
 											</span>{" "}
 											{policy.policyType}
 										</p>
-										<p>
-											<span className="font-bold text-gray-800">
-												Ipfs Hash:
-											</span>{" "}
-											{policy.ipfsHash}
-										</p>
+									</div>
+
+									<div className="w-[70%] self-center my-4 border border-gray-300 rounded-lg overflow-hidden">
+										<img
+											src={policy.ipfsHash}
+											alt="Pet"
+											className="w-full h-full object-cover"
+										/>
 									</div>
 
 									<div className="flex items-center justify-center space-x-8">
@@ -208,12 +214,12 @@ const Claim = () => {
 													handleConfirmClaim(policy.policyId);
 												}
 											}}
-											// disabled={confirmedPolicies.includes(policy.policyId)}
 											className={`${
 												confirmedPolicies.includes(policy.policyId)
 													? "self-center uppercase text-center text-white w-1/3 sm:text-2xl text-base font-semibold p-3 mt-2 rounded shadow bg-gradient-to-l from-black to-teal-800 sm:py-2"
 													: "self-center uppercase text-center text-white w-1/3 sm:text-2xl text-base font-semibold p-3 mt-2 rounded shadow bg-gradient-to-l from-black to-purple-800 sm:py-2"
 											}`}
+											disabled={confirmedPolicies.includes(policy.policyId)}
 										>
 											{confirmedPolicies.includes(policy.policyId) ? (
 												<Link
