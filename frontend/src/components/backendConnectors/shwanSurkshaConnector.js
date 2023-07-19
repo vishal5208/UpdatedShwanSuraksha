@@ -127,8 +127,6 @@ export const addPolicy = async ({
 				ipfsHash
 			);
 
-			console.log("metamsak khula hoag?");
-
 			const addPolicyRec = await addPolicyTx.wait();
 			const { args } = addPolicyRec.events.find(
 				(event) => event.event === "PolicyAdded"

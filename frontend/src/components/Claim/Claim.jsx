@@ -199,7 +199,7 @@ const Claim = () => {
 										</p>
 									</div>
 
-									<div className="w-[70%] self-center my-4 border border-gray-300 rounded-lg overflow-hidden">
+									<div className="w-[50%] h-[50%] self-center my-4 border border-gray-300 rounded-lg overflow-hidden">
 										<img
 											src={policy.ipfsHash}
 											alt="Pet"

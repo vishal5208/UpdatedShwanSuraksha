@@ -14,6 +14,7 @@ const QuoteForm = () => {
 	const [showPolicyPrice, setShowPolicyPrice] = useState(false);
 	const [premium, setPremium] = useState(0);
 	const [isLoding, setIsLoading] = useState(false);
+	const [isUploading, setIsUploading] = useState(false);
 	const [errorMsg, setErrorMsg] = useState("");
 	const [policyId, setPolicyId] = useState("");
 	const [petDetails, setPetDetails] = useState({
@@ -70,7 +71,9 @@ const QuoteForm = () => {
 		const client = new Web3Storage({ token });
 
 		try {
+			setIsUploading(true);
 			const cid = await client.put(files);
+			setIsUploading(false);
 			console.log("cid: ", cid);
 
 			setPetDetails((prevPetDetails) => ({
@@ -266,9 +269,10 @@ const QuoteForm = () => {
 									<div className="w-1/2 self-center">
 										<button
 											type="submit"
+											disabled={isUploading}
 											className="text-white  sm:text-2xl text-base font-semibold p-3 mt-2 rounded shadow bg-gradient-to-l  from-black to-purple-800 sm:py-2 sm:w-full"
 										>
-											UPLOAD
+											{isUploading ? "UPLOADING..." : "UPLOAD"}
 										</button>
 									</div>
 								</form>
