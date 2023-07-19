@@ -19,6 +19,7 @@ export const addPolicy = async ({
 	region,
 	healthCondition,
 	policyType,
+	ipfsHash,
 }) => {
 	console.log("in function : ", {
 		breed,
@@ -26,6 +27,7 @@ export const addPolicy = async ({
 		region,
 		healthCondition,
 		policyType,
+		ipfsHash,
 	});
 	try {
 		if (typeof window.ethereum !== "undefined") {
@@ -120,7 +122,8 @@ export const addPolicy = async ({
 				healthCondition,
 				policyType,
 				startTimestamp.toString(),
-				endTimestamp.toString()
+				endTimestamp.toString(),
+				ipfsHash
 			);
 
 			const addPolicyRec = await addPolicyTx.wait();

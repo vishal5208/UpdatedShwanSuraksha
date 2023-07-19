@@ -71,6 +71,7 @@ const Claim = () => {
 						region: data.data[8],
 						healthCondition: data.data[9],
 						policyType: data.data[10],
+						ipfsHash: data.data[11],
 					};
 
 					updatedPolicyData.push(policyData);
@@ -191,6 +192,12 @@ const Claim = () => {
 												Policy Type:
 											</span>{" "}
 											{policy.policyType}
+										</p>
+										<p>
+											<span className="font-bold text-gray-800">
+												Ipfs Hash:
+											</span>{" "}
+											{policy.ipfsHash}
 										</p>
 									</div>
 

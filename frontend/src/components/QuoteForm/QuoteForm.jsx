@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { calculatePremium } from "../backendConnectors/PremiumCalculatorConnector";
 import { addPolicy } from "../backendConnectors/shwanSurkshaConnector";
+import { Web3Storage } from "web3.storage";
+
+const token = process.env.REACT_APP_WEB3_TOKEN;
 
 const QuoteForm = () => {
 	const [breed, setBreed] = useState("");
@@ -19,9 +22,14 @@ const QuoteForm = () => {
 		region: "",
 		healthCondition: "",
 		policyType: "",
+		ipfsHash: "",
 	});
 
-	const handleSubmit = async (event) => {
+	// ifps
+	const [files, setFiles] = useState([]);
+	const [cid, setCid] = useState(null);
+
+	const handleQuoteSubmit = async (event) => {
 		event.preventDefault();
 
 		const petDetailsData = {
@@ -30,6 +38,7 @@ const QuoteForm = () => {
 			region: region,
 			healthCondition: healthCondition,
 			policyType: policyType,
+			ipfsHash: cid,
 		};
 
 		const data = await calculatePremium(petDetailsData);
@@ -46,12 +55,28 @@ const QuoteForm = () => {
 		setRegion("");
 		setHealthCondition("");
 		setPolicyType("");
+		setCid("");
 
 		// Set petDetails state using the existing state variable
 		setPetDetails((petDetails) => ({
 			...petDetails,
 			...petDetailsData,
 		}));
+	};
+
+	const handleFileSubmit = async (event) => {
+		event.preventDefault();
+
+		const client = new Web3Storage({ token });
+
+		try {
+			const cid = await client.put(files);
+			console.log("cid: ", cid);
+			setCid(cid);
+			// File submission was successful, handle the result as needed
+		} catch (error) {
+			console.error("Error submitting files:", error);
+		}
 	};
 
 	const handleAddPolicy = async () => {
@@ -81,7 +106,7 @@ const QuoteForm = () => {
 				<p className="text-center sm:text-4xl  text-2xl font-bold font-spaceGrotesk py-4">
 					Tell us about your pet.
 				</p>
-				<form onSubmit={handleSubmit}>
+				<form onSubmit={handleQuoteSubmit}>
 					<div className="grid sm:grid-cols-4 sm:gap-6 gap-3">
 						{/* Breed */}
 						<div className="col-span-full flex flex-col space-y-2 justify-center">
@@ -207,32 +232,65 @@ const QuoteForm = () => {
 
 			{showPolicyPrice && (
 				<div className="flex flex-col justify-center items-center space-x-4 space-y-5">
-					<div className="bg-[#c5bbd4] p-4 rounded-lg flex justify-center items-center flex-col space-y-4">
-						<p className="font-semibold text-2xl text-black mb-4 leading-10">
-							Your Pet's Premium is{" "}
-							<span className=" text-green-600">${premium}</span>.
-						</p>
-						<button
-							onClick={handleAddPolicy}
-							disabled={isLoding}
-							className="uppercase text-white sm:text-2xl text-base font-semibold p-3 mt-2 rounded shadow bg-gradient-to-l  from-black to-purple-800 sm:py-2 "
-						>
-							{isLoding ? "Adding Policy..." : "Add Policy"}
-						</button>
-					</div>
-					{policyId && (
-						<div className="flex gap-4 self-center items-center justify-center">
-							<span className="text-green-500 text-lg font-semibold">
-								POLICY ID: {policyId}
-							</span>
+					<div>
+						<div className="bg-[#c5bbd4] p-4 rounded-lg flex justify-center items-center flex-col space-y-4">
+							<p className="font-semibold text-2xl text-black mb-4 leading-10">
+								Your Pet's Premium is{" "}
+								<span className=" text-green-600">${premium}</span>.
+							</p>
+
+							<div className=" font-semibold w-6/7 bg-gradient-to-r from-indigo-200 from-10% via-sky-200	 via-30% to-emerald-500 to-90% px-2 py-4">
+								<form
+									id="upload-form"
+									className="flex flex-col space-y-2 "
+									onSubmit={handleFileSubmit}
+								>
+									<label htmlFor="filepicker" className="text-black sm:text-xl">
+										Pick images of your pet dog to store
+									</label>
+									<input
+										type="file"
+										id="filepicker"
+										name="fileList"
+										className="sm:text-lg cursor-pointer"
+										onChange={(e) => setFiles(e.target.files)}
+										multiple
+										required
+									/>
+
+									<div className="w-1/2 self-center">
+										<button
+											type="submit"
+											className="text-white  sm:text-2xl text-base font-semibold p-3 mt-2 rounded shadow bg-gradient-to-l  from-black to-purple-800 sm:py-2 sm:w-full"
+										>
+											UPLOAD
+										</button>
+									</div>
+								</form>
+							</div>
+
 							<button
-								className="bg-blue-600 hover:bg-blue-700 text-white rounded-md px-4 py-2 text-sm font-medium"
-								onClick={handleCopyBatchId}
+								onClick={handleAddPolicy}
+								disabled={isLoding}
+								className="uppercase text-white sm:text-2xl text-base font-semibold p-3 mt-2 rounded shadow bg-gradient-to-l  from-black to-purple-800 sm:py-2 "
 							>
-								Copy
+								{isLoding ? "Adding Policy..." : "Add Policy"}
 							</button>
 						</div>
-					)}
+						{policyId && (
+							<div className="flex gap-4 self-center items-center justify-center">
+								<span className="text-green-500 text-lg font-semibold">
+									POLICY ID: {policyId}
+								</span>
+								<button
+									className="bg-blue-600 hover:bg-blue-700 text-white rounded-md px-4 py-2 text-sm font-medium"
+									onClick={handleCopyBatchId}
+								>
+									Copy
+								</button>
+							</div>
+						)}
+					</div>
 				</div>
 			)}
 		</section>
