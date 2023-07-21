@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { calculatePremium } from "../backendConnectors/PremiumCalculatorConnector";
-import { addPolicy } from "../backendConnectors/shwanSurkshaConnector";
+import { calculatePremium, addPolicy } from "../backendConnectors";
 import { Web3Storage } from "web3.storage";
 
 const token = process.env.REACT_APP_WEB3_TOKEN;
@@ -48,6 +47,8 @@ const QuoteForm = () => {
 			setPremium(data.data);
 			// Show the policy price
 			setShowPolicyPrice(true);
+		} else {
+			setShowPolicyPrice(false);
 		}
 
 		// Reset form values
