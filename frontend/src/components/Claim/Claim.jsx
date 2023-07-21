@@ -8,18 +8,20 @@ import ClaimDataCard from "./ClaimDataCard";
 const token = process.env.REACT_APP_WEB3_TOKEN;
 
 const Claim = () => {
-	const [activePolicy, setActivePolicy] = useState([]);
+	const [activePolicies, setactivePolicies] = useState([]);
 	const [policyData, setPolicyData] = useState([]);
 	const [account, setAccount] = useState(null);
 	const [policyDetailsFetching, setPolicyDetailsFetching] = useState(false);
 
+
+	// whenever account changes fetch the new policy ids
 	useEffect(() => {
 		const fetchData = async () => {
 			setPolicyDetailsFetching(true);
 			const result = await getActivePoliciyOf();
 
 			if (result.success) {
-				setActivePolicy(result.policyIds);
+				setactivePolicies(result.policyIds);
 			}
 
 			setPolicyDetailsFetching(false);
@@ -28,6 +30,8 @@ const Claim = () => {
 		fetchData();
 	}, [account]);
 
+	
+	// set event listner to listen for accounts change and whenever componets unmount remove the listner
 	useEffect(() => {
 		const handleAccountsChanged = (accounts) => {
 			setAccount(accounts[0]);
@@ -40,11 +44,12 @@ const Claim = () => {
 		};
 	}, []);
 
+	
 	useEffect(() => {
 		const fetchPolicyData = async () => {
 			let updatedPolicyData = [];
 
-			for (const policyId of activePolicy) {
+			for (const policyId of activePolicies) {
 				const data = await getPolicy(policyId);
 
 				if (data.success) {
@@ -86,7 +91,7 @@ const Claim = () => {
 		};
 
 		fetchPolicyData();
-	}, [activePolicy]);
+	}, [activePolicies]);
 
 	return (
 		<section className="container mx-auto  py-8">
