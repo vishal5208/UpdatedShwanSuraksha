@@ -108,6 +108,15 @@ const QuoteForm = () => {
 		alert("Batch ID copied to clipboard!");
 	};
 
+	const getAbbreviatedPolicyId = (policyId) => {
+		if (policyId) {
+			return `${policyId.substring(0, 5)}...${policyId.substring(
+				policyId.length - 5
+			)}`;
+		}
+		return policyId;
+	};
+
 	return (
 		<section className="flex justify-center items-center w-6/7 mx-auto space-x-9">
 			<div className="flex flex-col flex-wrap sm:space-y-7  w-1/4  font-GeneralSans p-4 my-4 border-2 border-gradient border-black rounded-lg">
@@ -287,12 +296,12 @@ const QuoteForm = () => {
 							</button>
 						</div>
 						{policyId && (
-							<div className="flex gap-4 self-center items-center justify-center">
+							<div className="flex gap-4 self-center items-center justify-center mt-4 border-2 border-solid border-cyan-600 px-4 py-2">
 								<span className="text-green-500 text-lg font-semibold">
-									POLICY ID: {policyId}
+									POLICY ID: {getAbbreviatedPolicyId(policyId)}
 								</span>
 								<button
-									className="bg-blue-600 hover:bg-blue-700 text-white rounded-md px-4 py-2 text-sm font-medium"
+									className="bg-blue-600 hover:bg-blue-700 text-white rounded-md px-4 py-2 text-lg font-medium"
 									onClick={handleCopyBatchId}
 								>
 									Copy
