@@ -300,7 +300,7 @@ const QuoteForm = () => {
 							)}
 
 							{policyId && (
-								<div className="flex gap-4 self-center items-center justify-center mt-4 border-2 border-solid border-cyan-600 px-4 py-2">
+								<div className="flex gap-4 self-center items-center justify-center mt-4 px-4 py-2">
 									<span className="text-black-500 text-lg font-semibold">
 										POLICY ID: {getAbbreviatedPolicyId(policyId)}
 									</span>
