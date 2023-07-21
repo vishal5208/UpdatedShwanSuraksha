@@ -13,7 +13,7 @@ const QuoteForm = () => {
 	const [policyType, setPolicyType] = useState("");
 	const [showPolicyPrice, setShowPolicyPrice] = useState(false);
 	const [premium, setPremium] = useState(0);
-	const [isLoding, setIsLoading] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 	const [isUploading, setIsUploading] = useState(false);
 	const [errorMsg, setErrorMsg] = useState("");
 	const [policyId, setPolicyId] = useState("");
@@ -76,6 +76,8 @@ const QuoteForm = () => {
 			setIsUploading(false);
 			console.log("cid: ", cid);
 
+			setCid(cid);
+
 			setPetDetails((prevPetDetails) => ({
 				...prevPetDetails,
 				ipfsHash: cid,
@@ -84,6 +86,7 @@ const QuoteForm = () => {
 			// File submission was successful, handle the result as needed
 		} catch (error) {
 			console.error("Error submitting files:", error);
+			setIsUploading(false);
 		}
 	};
 
@@ -286,28 +289,30 @@ const QuoteForm = () => {
 									</div>
 								</form>
 							</div>
-
-							<button
-								onClick={handleAddPolicy}
-								disabled={isLoding}
-								className="uppercase text-white sm:text-2xl text-base font-semibold p-3 mt-2 rounded shadow bg-gradient-to-l  from-black to-purple-800 sm:py-2 "
-							>
-								{isLoding ? "Adding Policy..." : "Add Policy"}
-							</button>
-						</div>
-						{policyId && (
-							<div className="flex gap-4 self-center items-center justify-center mt-4 border-2 border-solid border-cyan-600 px-4 py-2">
-								<span className="text-green-500 text-lg font-semibold">
-									POLICY ID: {getAbbreviatedPolicyId(policyId)}
-								</span>
+							{cid !== "" && (
 								<button
-									className="bg-blue-600 hover:bg-blue-700 text-white rounded-md px-4 py-2 text-lg font-medium"
-									onClick={handleCopyBatchId}
+									onClick={handleAddPolicy}
+									disabled={isLoading}
+									className="uppercase text-white sm:text-2xl text-base font-semibold p-3 mt-2 rounded shadow bg-gradient-to-l from-black to-purple-800 sm:py-2"
 								>
-									Copy
+									{isLoading ? "Adding Policy..." : "Add Policy"}
 								</button>
-							</div>
-						)}
+							)}
+
+							{policyId && (
+								<div className="flex gap-4 self-center items-center justify-center mt-4 border-2 border-solid border-cyan-600 px-4 py-2">
+									<span className="text-black-500 text-lg font-semibold">
+										POLICY ID: {getAbbreviatedPolicyId(policyId)}
+									</span>
+									<button
+										className="bg-blue-600 hover:bg-blue-700 text-white rounded-md px-4 py-2 text-lg font-medium"
+										onClick={handleCopyBatchId}
+									>
+										Copy
+									</button>
+								</div>
+							)}
+						</div>
 					</div>
 				</div>
 			)}
