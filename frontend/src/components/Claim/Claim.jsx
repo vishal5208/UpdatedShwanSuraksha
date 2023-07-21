@@ -7,7 +7,6 @@ import {
 } from "../backendConnectors/shwanSurkshaConnector";
 import { ethers } from "ethers";
 import { Web3Storage } from "web3.storage";
-import QRCodeModal from "./QRCodeModal";
 const token = process.env.REACT_APP_WEB3_TOKEN;
 
 const Claim = () => {
@@ -15,7 +14,7 @@ const Claim = () => {
 	const [policyData, setPolicyData] = useState([]);
 	const [account, setAccount] = useState(null);
 	const [policyDetailsFetching, setPolicyDetailsFetching] = useState(false);
-	const [showQRCodeModal, setShowQRCodeModall] = useState(false);
+
 	const [confirmedPolicies, setConfirmedPolicies] = useState(() => {
 		const storedPolicies = localStorage.getItem("confirmedPolicies");
 		return storedPolicies ? JSON.parse(storedPolicies) : [];
@@ -61,6 +60,12 @@ const Claim = () => {
 					const client = new Web3Storage({ token: token });
 					const cid = ipfsHash.replace("ipfs://", "");
 					const response = await client.get(cid);
+
+					if (!response.ok) {
+						console.error(`Error fetching image for Policy ID: ${policyId}`);
+						continue; // Skip this policy and move to the next one
+					}
+
 					const files = await response.files();
 					const image = URL.createObjectURL(files[0]);
 
@@ -108,14 +113,6 @@ const Claim = () => {
 		} else {
 			console.log("Confirmation failed");
 		}
-	};
-
-	const handleOpenQRCodeModal = () => {
-		setShowQRCodeModall(true);
-	};
-
-	const handleCloseQRCodeModal = () => {
-		setShowQRCodeModall(false);
 	};
 
 	return (
@@ -233,14 +230,6 @@ const Claim = () => {
 												"Confirm a claim"
 											)}
 										</button>
-										{confirmedPolicies.includes(policy.policyId) && (
-											<button
-												onClick={handleOpenQRCodeModal}
-												className="self-center uppercase text-center text-white w-1/3 sm:text-2xl text-base font-semibold p-3 mt-2 rounded shadow bg-gradient-to-l from-black to-teal-800 sm:py-2"
-											>
-												Verify Claim
-											</button>
-										)}
 									</div>
 								</div>
 							))}
@@ -261,8 +250,6 @@ const Claim = () => {
 						</div>
 					)}
 				</div>
-
-				{showQRCodeModal && <QRCodeModal onClose={handleCloseQRCodeModal} />}
 			</div>
 		</section>
 	);

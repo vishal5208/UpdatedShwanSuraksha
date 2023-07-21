@@ -1,7 +1,7 @@
 const hre = require("hardhat");
 const fs = require("fs");
 
-let premimumCalculator, shwanSurksha, swhanSurkshaClaimVerifier;
+let premimumCalculator, shwanSurksha, claimShwanSuraksha;
 
 async function main() {
 	// premium calculator
@@ -24,21 +24,21 @@ async function main() {
 	shwanSurksha = await ShwanSurksha.deploy();
 	await shwanSurksha.deployed();
 
-	//SwhanSurkshaClaimVerifier
-	const SwhanSurkshaClaimVerifier = await hre.ethers.getContractFactory(
-		"SwhanSurkshaClaimVerifier"
+	//claimShwanSuraksha
+	const ClaimShwanSuraksha = await hre.ethers.getContractFactory(
+		"ClaimShwanSuraksha"
 	);
-	swhanSurkshaClaimVerifier = await SwhanSurkshaClaimVerifier.deploy(
-		shwanSurksha.address
-	);
-	await swhanSurkshaClaimVerifier.deployed();
+	claimShwanSuraksha = await ClaimShwanSuraksha.deploy();
+	await claimShwanSuraksha.deployed();
 
 	// initialize shwanSurksha
 	await shwanSurksha.updateContractsAddress(
 		uSDCToken.address,
 		premimumCalculator.address,
-		swhanSurkshaClaimVerifier.address
+		claimShwanSuraksha.address
 	);
+
+	await claimShwanSuraksha.updateShwanSurakshaAddr(shwanSurksha.address);
 
 	console.log(
 		"PremimumCalculator is deployed at : ",
@@ -48,8 +48,8 @@ async function main() {
 	console.log("USDCToken is deployed at : ", uSDCToken.address);
 
 	console.log(
-		"SwhanSurkshaClaimVerifier is deployed at : ",
-		swhanSurkshaClaimVerifier.address
+		"claimShwanSuraksha is deployed at : ",
+		claimShwanSuraksha.address
 	);
 
 	console.log("shwanSurksha is deployed at : ", shwanSurksha.address);
@@ -58,17 +58,13 @@ async function main() {
 	const premimiumCalculatorAbi = PremimumCalculator.interface.format("json");
 	const usdcTokenAbi = USDCToken.interface.format("json");
 	const shwanSurkshaAbi = ShwanSurksha.interface.format("json");
-	const shwansurkshaVerifierAbi =
-		SwhanSurkshaClaimVerifier.interface.format("json");
+	const claimShwanSurakshaAbi = ClaimShwanSuraksha.interface.format("json");
 
 	// Write contract addresses to file
 	const contracts = {
 		PremimumCalculator: [premimiumCalculatorAbi, premimumCalculator.address],
 		ShwanSurksha: [shwanSurkshaAbi, shwanSurksha.address],
-		SwhanSurkshaClaimVerifier: [
-			shwanSurkshaAbi,
-			swhanSurkshaClaimVerifier.address,
-		],
+		ClaimShwanSuraksha: [claimShwanSurakshaAbi, claimShwanSuraksha.address],
 		USDCToken: [usdcTokenAbi, uSDCToken.address],
 	};
 

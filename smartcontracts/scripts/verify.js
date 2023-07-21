@@ -21,8 +21,8 @@ const contractsToVerify = [
 		args: ["9999999999999999000000"],
 	},
 	{
-		address: contracts.SwhanSurkshaClaimVerifier[1],
-		args: [contracts.ShwanSurksha[1]],
+		address: contracts.ClaimShwanSuraksha[1],
+		args: [],
 	},
 	{
 		address: contracts.ShwanSurksha[1],
