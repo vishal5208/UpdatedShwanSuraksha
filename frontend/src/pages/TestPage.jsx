@@ -111,6 +111,7 @@ const TestPage = () => {
 					required
 				/>
 			</div>
+
 			<form onSubmit={handleSubmit} className="  w-4/5 mx-auto">
 				<div className="grid grid-cols-8 gap-6">
 					{/* claim details */}
@@ -119,50 +120,74 @@ const TestPage = () => {
 							Claim Details
 						</h2>
 
-						{/* Date and Time */}
-						<div className="col-span-full flex flex-col space-y-2 justify-center">
-							<label
-								htmlFor="dateAndTime"
-								className="font-semibold sm:text-lg font-spaceGrotesk"
-							>
-								Date and Time:
-							</label>
-							<input
-								type="datetime-local"
-								id="dateAndTime"
-								className="bg-[#1A0142] text-white border border-solid border-[#B1B1B1] rounded-lg sm:text-lg p-2 "
-								value={claimDetails.dateAndTime}
-								onChange={(event) =>
-									setClaimDetails({
-										...claimDetails,
-										dateAndTime: event.target.value,
-									})
-								}
-								required
-							/>
-						</div>
+						<div className="grid grid-cols-3 gap-3">
+							{/* Date and Time */}
+							<div className="flex flex-col space-y-2 justify-center">
+								<label
+									htmlFor="dateAndTime"
+									className="font-semibold sm:text-lg font-spaceGrotesk"
+								>
+									Date and Time:
+								</label>
+								<input
+									type="datetime-local"
+									id="dateAndTime"
+									className="bg-[#1A0142] text-white border border-solid border-[#B1B1B1] rounded-lg sm:text-lg p-2 "
+									value={claimDetails.dateAndTime}
+									onChange={(event) =>
+										setClaimDetails({
+											...claimDetails,
+											dateAndTime: event.target.value,
+										})
+									}
+									required
+								/>
+							</div>
 
-						{/* Location */}
-						<div className="col-span-full flex flex-col space-y-2 justify-center">
-							<label
-								htmlFor="location"
-								className="font-semibold sm:text-lg font-spaceGrotesk"
-							>
-								Location:
-							</label>
-							<input
-								type="text"
-								id="location"
-								className="bg-[#1A0142] text-white border border-solid border-[#B1B1B1] rounded-lg sm:text-lg p-2 "
-								value={claimDetails.location}
-								onChange={(event) =>
-									setClaimDetails({
-										...claimDetails,
-										location: event.target.value,
-									})
-								}
-								required
-							/>
+							{/* Location */}
+							<div className="   flex flex-col space-y-2 justify-center">
+								<label
+									htmlFor="location"
+									className="font-semibold sm:text-lg font-spaceGrotesk"
+								>
+									Location:
+								</label>
+								<input
+									type="text"
+									id="location"
+									className="bg-[#1A0142] text-white border border-solid border-[#B1B1B1] rounded-lg sm:text-lg p-2 "
+									value={claimDetails.location}
+									onChange={(event) =>
+										setClaimDetails({
+											...claimDetails,
+											location: event.target.value,
+										})
+									}
+									required
+								/>
+							</div>
+
+							{/* Is Accident */}
+							<div className="flex space-x-2 justify-center items-center">
+								<label
+									htmlFor="isAccident"
+									className="font-semibold sm:text-lg font-spaceGrotesk"
+								>
+									Is Accident:
+								</label>
+								<input
+									type="checkbox"
+									id="isAccident"
+									className="form-checkbox h-6 w-6 text-purple-500"
+									checked={claimDetails.isAccident}
+									onChange={(event) =>
+										setClaimDetails({
+											...claimDetails,
+											isAccident: event.target.checked,
+										})
+									}
+								/>
+							</div>
 						</div>
 
 						{/* Description */}
@@ -185,28 +210,6 @@ const TestPage = () => {
 								}
 								required
 							></textarea>
-						</div>
-
-						{/* Is Accident */}
-						<div className="col-span-full flex flex-col space-y-2 justify-center">
-							<label
-								htmlFor="isAccident"
-								className="font-semibold sm:text-lg font-spaceGrotesk"
-							>
-								Is Accident:
-							</label>
-							<input
-								type="checkbox"
-								id="isAccident"
-								className="form-checkbox h-6 w-6 text-purple-500"
-								checked={claimDetails.isAccident}
-								onChange={(event) =>
-									setClaimDetails({
-										...claimDetails,
-										isAccident: event.target.checked,
-									})
-								}
-							/>
 						</div>
 
 						{/* Other Parties Involved */}
