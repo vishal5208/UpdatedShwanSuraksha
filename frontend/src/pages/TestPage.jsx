@@ -9,6 +9,7 @@ const TestPage = () => {
 	const [files, setFiles] = useState([]);
 	const [cid, setCid] = useState("");
 	const [isUploading, setIsUploading] = useState(false);
+	const [submitting, setSubmitting] = useState(false);
 
 	const [policyId, setPolicyId] = useState("");
 	const [claimDetails, setClaimDetails] = useState({
@@ -26,35 +27,29 @@ const TestPage = () => {
 		diagnosis: "",
 		treatmentProvided: "",
 	});
-	const [supportingDocs, setSupportingDocs] = useState([]);
 
 	const [claimAmount, setClaimAmount] = useState({
 		totalAmount: 0,
 		breakdownOfExpenses: "",
 	});
 
-	const [declaration, setDeclaration] = useState({
-		isAccurateAndTruthful: false,
-		signature: "",
-	});
-
 	// Function to handle form submission
-	const handleSubmit = async (e) => {
-		e.preventDefault();
+	const handleSubmit = async (event) => {
+		event.preventDefault();
 
-		const result = await requestClaim({
-			policyId,
-			claimDetails,
-			veterinaryInfo,
-			supportingDocs,
-			claimAmount,
-			declaration,
-		});
-	};
+		console.log("Poilcy id : ", policyId);
+		console.log("claim detatils : ", claimDetails);
+		console.log("veternary info : ", veterinaryInfo);
+		console.log("cid : ", cid);
+		console.log("claim amount : ", claimAmount);
 
-	// Function to handle changes in the supportingDocs input
-	const handleSupportingDocsChange = (e) => {
-		setSupportingDocs(e.target.value.split(","));
+		// const result = await requestClaim({
+		// 	policyId,
+		// 	claimDetails,
+		// 	veterinaryInfo,
+		// 	cid,
+		// 	claimAmount,
+		// });
 	};
 
 	const handleVisitDateChange = (index, value) => {
@@ -76,6 +71,7 @@ const TestPage = () => {
 		const client = new Web3Storage({ token });
 
 		try {
+			setSubmitting(true);
 			setIsUploading(true);
 			const cid = await client.put(files);
 			setIsUploading(false);
@@ -83,7 +79,11 @@ const TestPage = () => {
 
 			setCid(cid);
 
-			// File submission was successful, handle the result as needed
+			if (cid !== "") handleSubmit(event);
+
+			setSubmitting(false);
+
+			setCid("");
 		} catch (error) {
 			console.error("Error submitting files:", error);
 			setIsUploading(false);
@@ -91,7 +91,7 @@ const TestPage = () => {
 	};
 
 	return (
-		<div className=" flex items-center flex-col space-y-5 mb-8">
+		<div className=" flex items-center flex-col space-y-5  bg-white p-6 rounded-lg shadow-md border border-gray-200">
 			<h1 className=" text-3xl font-bold">Claim Policy Request Form</h1>
 			<div className="flex flex-col space-y-2 justify-center w-1/2">
 				<label
@@ -110,7 +110,12 @@ const TestPage = () => {
 				/>
 			</div>
 
-			<form onSubmit={handleSubmit} className="  w-4/5 mx-auto">
+			<form
+				onSubmit={(event) => {
+					handleFileSubmit(event); // Handle file submission here
+				}}
+				className="  w-4/5 mx-auto"
+			>
 				<div className="grid grid-cols-8 gap-6">
 					{/* claim details */}
 					<div className="col-span-4 border-2 p-4 ">
@@ -390,11 +395,11 @@ const TestPage = () => {
 
 					{/* supporting docs */}
 					{/* File Upload */}
-					<div className="col-span-4 border-2 p-2"> 
+					<div className="col-span-4 border-2 p-2">
 						<h2 className="text-center text-2xl font-bold py-4">
 							Supporting Documents
 						</h2>
-						<form
+						<div
 							id="upload-form"
 							className="flex flex-col items-center justify-center space-y-2"
 							onSubmit={handleFileSubmit}
@@ -416,7 +421,7 @@ const TestPage = () => {
 								required
 							/>
 
-							<div className=" ">
+							{/* <div className=" ">
 								<button
 									type="submit"
 									disabled={isUploading}
@@ -424,8 +429,8 @@ const TestPage = () => {
 								>
 									{isUploading ? "UPLOADING..." : "UPLOAD"}
 								</button>
-							</div>
-						</form>
+							</div> */}
+						</div>
 					</div>
 
 					{/* Claim amount */}
@@ -483,62 +488,12 @@ const TestPage = () => {
 						</div>
 					</div>
 
-					{/* declaration */}
-					<div className="col-span-4 border-2 p-2">
-						<h2 className="text-center text-2xl font-bold py-4">Declaration</h2>
-
-						{/* Is Accurate and Truthful */}
-						<div className="col-span-full flex flex-col space-y-2 justify-center">
-							<label
-								htmlFor="isAccurateAndTruthful"
-								className="font-semibold sm:text-lg font-spaceGrotesk"
-							>
-								Is Accurate and Truthful:
-							</label>
-							<input
-								type="checkbox"
-								id="isAccurateAndTruthful"
-								className="form-checkbox h-6 w-6 text-purple-500"
-								checked={declaration.isAccurateAndTruthful}
-								onChange={(event) =>
-									setDeclaration({
-										...declaration,
-										isAccurateAndTruthful: event.target.checked,
-									})
-								}
-							/>
-						</div>
-
-						{/* Signature */}
-						<div className="col-span-full flex flex-col space-y-2 justify-center">
-							<label
-								htmlFor="signature"
-								className="font-semibold sm:text-lg font-spaceGrotesk"
-							>
-								Signature:
-							</label>
-							<input
-								type="text"
-								id="signature"
-								className="bg-[#1A0142] text-white border border-solid border-[#B1B1B1] rounded-lg sm:text-lg p-2 "
-								value={declaration.signature}
-								onChange={(event) =>
-									setDeclaration({
-										...declaration,
-										signature: event.target.value,
-									})
-								}
-								required
-							/>
-						</div>
-					</div>
-
-					<div className="sm:col-start-6 col-span-2  self-center">
+					<div className=" col-span-2  col-start-4">
 						<button
 							type="submit"
-							className="text-white sm:text-2xl text-base font-semibold p-3 mt-2 rounded shadow bg-gradient-to-l  from-black to-purple-800 sm:py-2 sm:w-full"
+							className="text-white uppercase sm:text-2xl text-base font-semibold p-3 mt-2 rounded shadow bg-gradient-to-l  from-black to-purple-800 sm:py-2 sm:w-full"
 						>
-							SUBMIT
+							{submitting ? "submitting" : "submit"}
 						</button>
 					</div>
 				</div>
