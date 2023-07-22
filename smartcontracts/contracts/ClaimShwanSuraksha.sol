@@ -43,37 +43,24 @@ contract ClaimShwanSuraksha {
         string treatmentProvided;
     }
 
-    struct SupportingDocumentation {
-        string[] ipfsHashes;
-    }
-
-    // string private supportinDocIpfsHash;
-
     struct ClaimAmount {
         uint256 totalAmount;
         string breakdownOfExpenses;
     }
 
-    struct Declaration {
-        bool isAccurateAndTruthful;
-        string signature;
-    }
-
     struct ClaimPolicyData {
         ClaimDetails claimDetails;
         VeterinaryInfo veterinaryInfo;
-        SupportingDocumentation supportingDocs;
         ClaimAmount claimAmount;
-        Declaration declaration;
+        string supportinDocIpfsHash;
     }
 
     function requestClaimPolicy(
         bytes32 policyId,
-        ClaimDetails memory newClaimDetails,
-        VeterinaryInfo memory newVeterinaryInfo,
-        string[] memory newSupportingDocs,
-        ClaimAmount memory newClaimAmount,
-        Declaration memory newDeclaration
+        ClaimDetails memory _claimDetails,
+        VeterinaryInfo memory _veterinaryInfo,
+        string memory _supportinDocIpfsHash,
+        ClaimAmount memory _claimAmount
     ) external {
         address policyOwner = shwanSuraksha.getPolicyHolderAddress(policyId);
         require(
@@ -81,17 +68,11 @@ contract ClaimShwanSuraksha {
             "Policy does not exist or you are not the owner"
         );
 
-        SupportingDocumentation
-            memory newSupportingDoc = SupportingDocumentation(
-                newSupportingDocs
-            );
-
         ClaimPolicyData memory newClaimPolicyData = ClaimPolicyData(
-            newClaimDetails,
-            newVeterinaryInfo,
-            newSupportingDoc,
-            newClaimAmount,
-            newDeclaration
+            _claimDetails,
+            _veterinaryInfo,
+            _claimAmount,
+            _supportinDocIpfsHash
         );
 
         claimPolicies[policyId] = newClaimPolicyData;
