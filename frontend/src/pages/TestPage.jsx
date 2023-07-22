@@ -233,12 +233,12 @@ const TestPage = () => {
 					</div>
 
 					{/* veterinary info */}
-					<div className="col-span-4 border-2 p-2 ">
-						<h2 className="text-center text-2xl font-bold py-4">
+					<div className="col-span-4 border-2 p-2  space-y-2">
+						<h2 className="text-center text-2xl font-bold">
 							Veterinary Details
 						</h2>
 
-						<div className="grid grid-cols-2 gap-2">
+						<div className=" grid grid-cols-3 gap-3">
 							<div className="flex flex-col space-y-2 justify-center">
 								<label
 									htmlFor="veterinarianName"
@@ -306,20 +306,22 @@ const TestPage = () => {
 									required
 								/>
 							</div>
+						</div>
 
-							{/* Visit Dates (multiple input fields) */}
-							<div className="flex flex-col space-y-2 justify-center">
-								<label
-									htmlFor="visitDates"
-									className="font-semibold sm:text-lg font-spaceGrotesk"
-								>
-									Visit Dates:
-								</label>
+						{/* Visit Dates (multiple input fields) */}
+						<div className="flex flex-col space-y-2 justify-center">
+							<label
+								htmlFor="visitDates"
+								className="font-semibold sm:text-lg font-spaceGrotesk"
+							>
+								Visit Dates:
+							</label>
+							<div className="grid grid-cols-4 gap-2">
 								{veterinaryInfo.visitDates.map((visitDate, index) => (
 									<input
 										key={index}
 										type="date"
-										className="bg-[#1A0142] text-white border border-solid border-[#B1B1B1] rounded-lg sm:text-lg p-2 "
+										className="bg-[#1A0142]  text-white border border-solid border-[#B1B1B1] rounded-lg sm:text-lg p-2 "
 										value={visitDate}
 										onChange={(event) =>
 											handleVisitDateChange(index, event.target.value)
@@ -335,9 +337,12 @@ const TestPage = () => {
 									Add Visit Date
 								</button>
 							</div>
+						</div>
 
+						{/* Diagnosis */}
+						<div className=" grid grid-cols-4 gap-3">
 							{/* Diagnosis */}
-							<div className="flex flex-col space-y-2 justify-center">
+							<div className=" col-span-2 flex flex-col space-y-2 justify-center">
 								<label
 									htmlFor="diagnosis"
 									className="font-semibold sm:text-lg font-spaceGrotesk"
@@ -359,7 +364,7 @@ const TestPage = () => {
 							</div>
 
 							{/* Treatment Provided */}
-							<div className="col-span-full flex flex-col space-y-2 justify-center">
+							<div className=" col-span-2 flex flex-col space-y-2 justify-center">
 								<label
 									htmlFor="treatmentProvided"
 									className="font-semibold sm:text-lg font-spaceGrotesk"
@@ -381,6 +386,7 @@ const TestPage = () => {
 							</div>
 						</div>
 					</div>
+
 					{/* supporting docs */}
 					{/* File Upload */}
 					<div className="col-span-4 border-2 p-2">
