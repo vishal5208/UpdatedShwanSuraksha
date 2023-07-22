@@ -31,8 +31,6 @@ const TestPage = () => {
 	const [claimAmount, setClaimAmount] = useState({
 		totalAmount: 0,
 		breakdownOfExpenses: "",
-		deductible: 0,
-		limit: 0,
 	});
 
 	const [declaration, setDeclaration] = useState({
@@ -426,104 +424,62 @@ const TestPage = () => {
 							</div>
 						</form>
 					</div>
+
 					{/* Claim amount */}
 					<div className="col-span-4 border-2 p-2">
 						<h2 className="text-center text-2xl font-bold py-4">
 							Claim Amount
 						</h2>
 
-						{/* Total Amount */}
-						<div className="col-span-full flex flex-col space-y-2 justify-center">
-							<label
-								htmlFor="totalAmount"
-								className="font-semibold sm:text-lg font-spaceGrotesk"
-							>
-								Total Amount:
-							</label>
-							<input
-								type="number"
-								id="totalAmount"
-								className="bg-[#1A0142] text-white border border-solid border-[#B1B1B1] rounded-lg sm:text-lg p-2 l"
-								value={claimAmount.totalAmount}
-								onChange={(event) =>
-									setClaimAmount({
-										...claimAmount,
-										totalAmount: event.target.value,
-									})
-								}
-								required
-							/>
-						</div>
+						<div className=" grid  grid-cols-4 gap-3">
+							{/* Total Amount */}
+							<div className="col-span-2 flex flex-col space-y-2 justify-center">
+								<label
+									htmlFor="totalAmount"
+									className="font-semibold sm:text-lg font-spaceGrotesk"
+								>
+									Total Amount:
+								</label>
+								<input
+									type="number"
+									id="totalAmount"
+									className="bg-[#1A0142] text-white border border-solid border-[#B1B1B1] rounded-lg sm:text-lg p-2 l"
+									value={claimAmount.totalAmount}
+									onChange={(event) =>
+										setClaimAmount({
+											...claimAmount,
+											totalAmount: event.target.value,
+										})
+									}
+									required
+								/>
+							</div>
 
-						{/* Breakdown of Expenses */}
-						<div className="col-span-full flex flex-col space-y-2 justify-center">
-							<label
-								htmlFor="breakdownOfExpenses"
-								className="font-semibold sm:text-lg font-spaceGrotesk"
-							>
-								Breakdown of Expenses:
-							</label>
-							<input
-								type="text"
-								id="breakdownOfExpenses"
-								className="bg-[#1A0142] text-white border border-solid border-[#B1B1B1] rounded-lg sm:text-lg p-2 "
-								value={claimAmount.breakdownOfExpenses}
-								onChange={(event) =>
-									setClaimAmount({
-										...claimAmount,
-										breakdownOfExpenses: event.target.value,
-									})
-								}
-								required
-							/>
-						</div>
-
-						{/* Deductible */}
-						<div className="col-span-full flex flex-col space-y-2 justify-center">
-							<label
-								htmlFor="deductible"
-								className="font-semibold sm:text-lg font-spaceGrotesk"
-							>
-								Deductible:
-							</label>
-							<input
-								type="number"
-								id="deductible"
-								className="bg-[#1A0142] text-white border border-solid border-[#B1B1B1] rounded-lg sm:text-lg p-2 "
-								value={claimAmount.deductible}
-								onChange={(event) =>
-									setClaimAmount({
-										...claimAmount,
-										deductible: event.target.value,
-									})
-								}
-								required
-							/>
-						</div>
-
-						{/* Limit */}
-						<div className="col-span-full flex flex-col space-y-2 justify-center">
-							<label
-								htmlFor="limit"
-								className="font-semibold sm:text-lg font-spaceGrotesk"
-							>
-								Limit:
-							</label>
-							<input
-								type="number"
-								id="limit"
-								className="bg-[#1A0142] text-white border border-solid border-[#B1B1B1] rounded-lg sm:text-lg p-2 "
-								value={claimAmount.limit}
-								onChange={(event) =>
-									setClaimAmount({
-										...claimAmount,
-										limit: event.target.value,
-									})
-								}
-								required
-							/>
+							{/* Breakdown of Expenses */}
+							<div className="col-span-2 flex flex-col space-y-2 justify-center">
+								<label
+									htmlFor="breakdownOfExpenses"
+									className="font-semibold sm:text-lg font-spaceGrotesk"
+								>
+									Breakdown of Expenses:
+								</label>
+								<input
+									type="text"
+									id="breakdownOfExpenses"
+									className="bg-[#1A0142] text-white border border-solid border-[#B1B1B1] rounded-lg sm:text-lg p-2 "
+									value={claimAmount.breakdownOfExpenses}
+									onChange={(event) =>
+										setClaimAmount({
+											...claimAmount,
+											breakdownOfExpenses: event.target.value,
+										})
+									}
+									required
+								/>
+							</div>
 						</div>
 					</div>
+
 					{/* declaration */}
 					<div className="col-span-4 border-2 p-2">
 						<h2 className="text-center text-2xl font-bold py-4">Declaration</h2>

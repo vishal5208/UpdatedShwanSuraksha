@@ -52,8 +52,6 @@ contract ClaimShwanSuraksha {
     struct ClaimAmount {
         uint256 totalAmount;
         string breakdownOfExpenses;
-        uint256 deductible;
-        uint256 limit;
     }
 
     struct Declaration {
