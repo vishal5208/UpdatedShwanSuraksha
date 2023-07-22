@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import { Link } from "react-router-dom";
 
 const ClaimDataCard = ({ policy }) => {
 	return (
@@ -67,6 +68,14 @@ const ClaimDataCard = ({ policy }) => {
 					className="h-full w-full object-fill rounded-full"
 				/>
 			</div>
+
+			<Link
+				to="/requestClaim"
+				state={{ policyId: policy.policyId }}
+				className="self-center uppercase text-center text-white sm:text-2xl text-base font-semibold p-3 mt-2 rounded shadow bg-gradient-to-l from-black to-purple-800 sm:py-2"
+			>
+				Request Claim
+			</Link>
 		</div>
 	);
 };

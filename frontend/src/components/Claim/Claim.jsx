@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 
 import { getActivePoliciyOf, getPolicy } from "../backendConnectors";
-import { Link } from "react-router-dom";
 import { Web3Storage } from "web3.storage";
 import ClaimDataCard from "./ClaimDataCard";
 
 const token = process.env.REACT_APP_WEB3_TOKEN;
 
 const Claim = () => {
+	
 	const [activePolicies, setactivePolicies] = useState([]);
 	const [policyData, setPolicyData] = useState([]);
 	const [account, setAccount] = useState(null);
@@ -90,8 +90,6 @@ const Claim = () => {
 		fetchPolicyData();
 	}, [activePolicies]);
 
-	const handleRequestClaim = async (policyId) => {};
-
 	return (
 		<section className="container mx-auto  py-8">
 			<div className="flex justify-center">
@@ -101,14 +99,13 @@ const Claim = () => {
 							Active Policies
 						</h2>
 
-						<button
-							onClick={handleRequestClaim}
-							className="self-center uppercase text-center text-white sm:text-2xl text-base font-semibold p-3 mt-2 rounded shadow bg-gradient-to-l  from-black to-purple-800 sm:py-2"
-						>
-							<Link to="/requestClaim" className="text-white uppercase">
-								Request Claim
-							</Link>
-						</button>
+						{/* {policyData.length > 0 && !policyDetailsFetching && (
+							<button className="self-center uppercase text-center text-white sm:text-2xl text-base font-semibold p-3 mt-2 rounded shadow bg-gradient-to-l  from-black to-purple-800 sm:py-2">
+								<Link to="/requestClaim" className="text-white uppercase">
+									Request Claim
+								</Link>
+							</button>
+						)} */}
 					</div>
 					{policyData.length > 0 && !policyDetailsFetching ? (
 						<div className="grid grid-cols-2 gap-4 p-4 uppercase">

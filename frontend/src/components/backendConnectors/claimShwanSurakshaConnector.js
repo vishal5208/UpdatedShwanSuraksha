@@ -4,13 +4,12 @@ const contracts = require("../../constants/contracts.json");
 const claimShwanSurakshaContractAddr = contracts.ClaimShwanSuraksha[1];
 const claimShwanSurakshaContractAbi = contracts.ClaimShwanSuraksha[0];
 
-export const requestClaim = async (
+export const requestClaimPolicy = async (
 	policyId,
-	newClaimDetails,
-	newVeterinaryInfo,
-	newSupportingDocs,
-	newClaimAmount,
-	newDeclaration
+	claimDetails,
+	veterinaryInfo,
+	cid,
+	claimAmount
 ) => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
@@ -19,31 +18,35 @@ export const requestClaim = async (
 			const signer = provider.getSigner();
 			console.log({ signer });
 
+			console.log("Poilcy id : ", policyId);
+			console.log("claim detatils : ", claimDetails);
+			console.log("veternary info : ", veterinaryInfo);
+			console.log("cid : ", cid);
+			console.log("claim amount : ", claimAmount);
+
 			const contract = new ethers.Contract(
 				claimShwanSurakshaContractAddr,
 				claimShwanSurakshaContractAbi,
 				signer
 			);
 
-			// Convert the string array to bytes32 array for newSupportingDocs
-			const newSupportingDocsBytes32 = newSupportingDocs.map((doc) =>
-				ethers.formatBytes32String(doc)
-			);
-
 			const tx = await contract.requestClaimPolicy(
 				policyId,
-				newClaimDetails,
-				newVeterinaryInfo,
-				newSupportingDocsBytes32,
-				newClaimAmount,
-				newDeclaration
+				claimDetails,
+				veterinaryInfo,
+				cid,
+				claimAmount
 			);
 
 			await tx.wait();
 
+			// const { args } = txRec.events.find(
+			// 	(event) => event.event === "ClaimRequested"
+			// );
+
 			return {
 				success: true,
-				msg: "Claim policy request successful!",
+				msg: "Claim policy request has been successfully submitted. Please await administrative approval for further processing.",
 			};
 		} else {
 			return {

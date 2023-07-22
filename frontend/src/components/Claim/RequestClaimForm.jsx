@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { requestClaim } from "../backendConnectors/claimShwanSurakshaConnector";
 import { Web3Storage } from "web3.storage";
+import { useLocation } from "react-router-dom";
+
+import { requestClaimPolicy } from "../backendConnectors/claimShwanSurakshaConnector";
 const token = process.env.REACT_APP_WEB3_TOKEN;
 
-const RequestClaimForm = () => {
+const RequestClaimForm = ({ policyId }) => {
 	// ifps
 	const [files, setFiles] = useState([]);
 	const [cid, setCid] = useState("");
@@ -11,7 +13,7 @@ const RequestClaimForm = () => {
 	const [submitting, setSubmitting] = useState(false);
 
 	//
-	const [policyId, setPolicyId] = useState("");
+	// const [policyId, setPolicyId] = useState("");
 	const [claimDetails, setClaimDetails] = useState({
 		dateAndTime: "",
 		location: "",
@@ -37,19 +39,19 @@ const RequestClaimForm = () => {
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 
-		console.log("Poilcy id : ", policyId);
-		console.log("claim detatils : ", claimDetails);
-		console.log("veternary info : ", veterinaryInfo);
-		console.log("cid : ", cid);
-		console.log("claim amount : ", claimAmount);
+		const result = await requestClaimPolicy(
+			policyId,
+			claimDetails,
+			veterinaryInfo,
+			cid,
+			claimAmount
+		);
 
-		// const result = await requestClaim({
-		// 	policyId,
-		// 	claimDetails,
-		// 	veterinaryInfo,
-		// 	cid,
-		// 	claimAmount,
-		// });
+		if (result.success) {
+			alert(result.msg);
+		} else {
+			console.log(result.msg);
+		}
 	};
 
 	const handleVisitDateChange = (index, value) => {
@@ -93,7 +95,7 @@ const RequestClaimForm = () => {
 	return (
 		<div className=" flex items-center flex-col space-y-5  bg-white p-6 rounded-lg shadow-md border border-gray-200">
 			<h1 className=" text-3xl font-bold">Claim Policy Request Form</h1>
-			<div className="flex flex-col space-y-2 justify-center w-1/2">
+			{/* <div className="flex flex-col space-y-2 justify-center w-1/2">
 				<label
 					htmlFor="policyId"
 					className="font-semibold sm:text-lg font-spaceGrotesk"
@@ -108,7 +110,7 @@ const RequestClaimForm = () => {
 					onChange={(e) => setPolicyId(e.target.value)}
 					required
 				/>
-			</div>
+			</div> */}
 
 			<form
 				onSubmit={(event) => {
