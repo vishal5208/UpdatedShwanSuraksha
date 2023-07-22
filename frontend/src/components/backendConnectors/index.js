@@ -1,15 +1,15 @@
-import { calculatePremium } from "./claimShwanSurakshaConnector";
 import {
 	addPolicy,
 	confirmClaim,
 	getActivePoliciyOf,
 	getPolicy,
 } from "./shwanSurkshaConnector";
+import { calculatePremium } from "./PremiumCalculatorConnector";
 
 export {
-	calculatePremium,
 	addPolicy,
 	confirmClaim,
 	getActivePoliciyOf,
 	getPolicy,
+	calculatePremium,
 };

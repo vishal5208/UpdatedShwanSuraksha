@@ -47,6 +47,8 @@ contract ClaimShwanSuraksha {
         string[] ipfsHashes;
     }
 
+    // string private supportinDocIpfsHash;
+
     struct ClaimAmount {
         uint256 totalAmount;
         string breakdownOfExpenses;

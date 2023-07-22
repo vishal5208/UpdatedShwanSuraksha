@@ -124,7 +124,7 @@ const QuoteForm = () => {
 	return (
 		<section className="flex justify-center items-center w-6/7 mx-auto space-x-9">
 			<div className="flex flex-col flex-wrap sm:space-y-7  w-1/4  font-GeneralSans p-4 my-4 border-2 border-gradient border-black rounded-lg">
-				<p className="text-center sm:text-4xl  text-2xl font-bold font-spaceGrotesk py-4">
+				<p className="text-center sm:text-4xl  text-2xl font-bold py-4">
 					Tell us about your pet.
 				</p>
 				<form onSubmit={handleQuoteSubmit}>
@@ -263,7 +263,7 @@ const QuoteForm = () => {
 							<div className=" font-semibold w-6/7 bg-gradient-to-r from-indigo-200 from-10% via-sky-200	 via-30% to-emerald-500 to-90% px-2 py-4">
 								<form
 									id="upload-form"
-									className="flex flex-col space-y-2 "
+									className="flex flex-col space-y-2"
 									onSubmit={handleFileSubmit}
 								>
 									<label htmlFor="filepicker" className="text-black sm:text-xl">
@@ -276,6 +276,7 @@ const QuoteForm = () => {
 										className="sm:text-lg cursor-pointer"
 										onChange={(e) => setFiles(e.target.files)}
 										multiple
+										accept="image/jpeg, image/png, image/gif" // Only accept image files
 										required
 									/>
 
@@ -283,7 +284,7 @@ const QuoteForm = () => {
 										<button
 											type="submit"
 											disabled={isUploading}
-											className="text-white  sm:text-2xl text-base font-semibold p-3 mt-2 rounded shadow bg-gradient-to-l  from-black to-purple-800 sm:py-2 sm:w-full"
+											className="text-white sm:text-2xl text-base font-semibold p-3 mt-2 rounded shadow bg-gradient-to-l from-black to-purple-800 sm:py-2 sm:w-full"
 										>
 											{isUploading ? "UPLOADING..." : "UPLOAD"}
 										</button>

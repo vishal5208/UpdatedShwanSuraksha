@@ -1,44 +1,50 @@
 const { ethers } = require("ethers");
 const { requestAccount } = require("./commonConnectors");
 const contracts = require("../../constants/contracts.json");
-const premiumCalculatorContractAddress = contracts.PremimumCalculator[1];
-const premiumCalculatorAbi = contracts.PremimumCalculator[0];
+const claimShwanSurakshaContractAddr = contracts.ClaimShwanSuraksha[1];
+const claimShwanSurakshaContractAbi = contracts.ClaimShwanSuraksha[0];
 
-const sixDecimals = 6;
-
-export const calculatePremium = async ({
-	breed,
-	age,
-	region,
-	healthCondition,
-	policyType,
-}) => {
+export const requestClaim = async (
+	policyId,
+	newClaimDetails,
+	newVeterinaryInfo,
+	newSupportingDocs,
+	newClaimAmount,
+	newDeclaration
+) => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			await requestAccount();
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
 			const signer = provider.getSigner();
 			console.log({ signer });
+
 			const contract = new ethers.Contract(
-				premiumCalculatorContractAddress,
-				premiumCalculatorAbi,
+				claimShwanSurakshaContractAddr,
+				claimShwanSurakshaContractAbi,
 				signer
 			);
 
-			let data = await contract.calculatePremium(
-				breed,
-				age,
-				region,
-				healthCondition,
-				policyType
+			// Convert the string array to bytes32 array for newSupportingDocs
+			const newSupportingDocsBytes32 = newSupportingDocs.map((doc) =>
+				ethers.formatBytes32String(doc)
 			);
 
-			if (data) {
-				return {
-					data: ethers.utils.formatUnits(data, sixDecimals),
-					success: true,
-				};
-			}
+			const tx = await contract.requestClaimPolicy(
+				policyId,
+				newClaimDetails,
+				newVeterinaryInfo,
+				newSupportingDocsBytes32,
+				newClaimAmount,
+				newDeclaration
+			);
+
+			await tx.wait();
+
+			return {
+				success: true,
+				msg: "Claim policy request successful!",
+			};
 		} else {
 			return {
 				success: false,
