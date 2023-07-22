@@ -10,8 +10,6 @@ const contracts = require("../../constants/contracts.json");
 
 const shwanSurkshaAddress = contracts.ShwanSurksha[1];
 const shwanSurkshaAbi = contracts.ShwanSurksha[0];
-const usdcContractAddress = contracts.USDCToken[1];
-const usdcTokenAbi = contracts.USDCToken[0];
 
 export const addPolicy = async ({
 	breed,
@@ -217,32 +215,6 @@ export const getPolicy = async (policyId) => {
 			success: false,
 			msg: error.message,
 		};
-	}
-};
-
-export const confirmClaim = async (policyId) => {
-	try {
-		if (typeof window.ethereum !== "undefined") {
-			await requestAccount();
-			const provider = new ethers.providers.Web3Provider(window.ethereum);
-			const signer = provider.getSigner();
-
-			const contract = new ethers.Contract(
-				shwanSurkshaAddress,
-				shwanSurkshaAbi,
-				signer
-			);
-
-			const tx = await contract.claimPolicy(policyId);
-			await tx.wait();
-
-			return true;
-		} else {
-			return false;
-		}
-	} catch (error) {
-		console.error(error);
-		return false;
 	}
 };
 

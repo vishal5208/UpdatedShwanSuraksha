@@ -83,6 +83,7 @@ contract ClaimShwanSuraksha {
             false
         );
 
+        shwanSuraksha.updateClaimRequestedStatus(policyId, true);
         claimPolicies[policyId] = newClaimPolicyData;
         policyIds.push(policyId);
 
@@ -95,6 +96,8 @@ contract ClaimShwanSuraksha {
             policyOwner == msg.sender,
             "Policy does not exist or you are not the owner"
         );
+
+        shwanSuraksha.updateClaimRequestedStatus(policyId, false);
 
         delete claimPolicies[policyId];
 

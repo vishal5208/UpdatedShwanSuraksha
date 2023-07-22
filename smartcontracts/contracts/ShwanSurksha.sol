@@ -7,6 +7,13 @@ import "./interfaces/IPremimumCalculator.sol";
 import "./interfaces/IClaimShwanSuraksha.sol";
 
 contract ShwanSurksha {
+    struct PetData {
+        string breed;
+        uint ageInMonths;
+        string healthCondition;
+        string region;
+    }
+
     struct Policy {
         address owner;
         uint256 premium;
@@ -14,17 +21,15 @@ contract ShwanSurksha {
         uint256 startDate;
         uint256 endDate;
         bool claimed;
-        string breed;
-        uint ageInMonths;
-        string healthCondition;
-        string region;
+        bool claimRequested;
         string policyType;
         string ipfsHash;
+        PetData petData;
     }
 
     // Mapping to store policies by their unique ID
-    mapping(bytes32 => Policy) policy;
-    mapping(address => bytes32[]) public policyHolderToIDs;
+    mapping(bytes32 => Policy) private policy;
+    mapping(address => bytes32[]) private policyHolderToIDs;
 
     // Events to emit when policies are added and claimed
     event PolicyAdded(
@@ -117,6 +122,13 @@ contract ShwanSurksha {
             "USDC transfer failed"
         );
 
+        PetData memory petdata = PetData(
+            _breed,
+            _ageInMonths,
+            _healthCondition,
+            _region
+        );
+
         policy[policyId] = Policy(
             msg.sender,
             premium,
@@ -124,12 +136,10 @@ contract ShwanSurksha {
             startDate,
             endDate,
             false,
-            _breed,
-            _ageInMonths,
-            _healthCondition,
-            _region,
+            false,
             _policyType,
-            _ipfsHash
+            _ipfsHash,
+            petdata
         );
 
         policyHolderToIDs[msg.sender].push(policyId);
@@ -233,6 +243,23 @@ contract ShwanSurksha {
         emit PolicyUpdated(policyId, msg.sender, newEndDate);
     }
 
+    modifier onlyClaimShwanSurakshaContract() {
+        require(
+            msg.sender == address(claimShwanSuraksha),
+            "Only ShwanSurakshaClaimContract can perform this action"
+        );
+        _;
+    }
+
+    function updateClaimRequestedStatus(
+        bytes32 policyId,
+        bool _claimRequestedStatus
+    ) external onlyClaimShwanSurakshaContract {
+        Policy storage _policy = policy[policyId];
+
+        _policy.claimRequested = _claimRequestedStatus;
+    }
+
     // getters
     function getPolicy(
         bytes32 policyId
@@ -246,12 +273,10 @@ contract ShwanSurksha {
             uint256 startDate,
             uint256 endDate,
             bool claimed,
-            string memory breed,
-            uint ageInMonths,
-            string memory healthCondition,
-            string memory region,
+            bool claimRequested,
             string memory policyType,
-            string memory ipfsHash
+            string memory ipfsHash,
+            PetData memory petdata
         )
     {
         Policy storage _policy = policy[policyId];
@@ -263,12 +288,10 @@ contract ShwanSurksha {
             _policy.startDate,
             _policy.endDate,
             _policy.claimed,
-            _policy.breed,
-            _policy.ageInMonths,
-            _policy.healthCondition,
-            _policy.region,
+            _policy.claimRequested,
             _policy.policyType,
-            _policy.ipfsHash
+            _policy.ipfsHash,
+            _policy.petData
         );
     }
 

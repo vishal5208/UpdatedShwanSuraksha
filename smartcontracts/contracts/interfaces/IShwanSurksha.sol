@@ -9,4 +9,9 @@ interface IShwanSurksha {
     function getPolicyOwnerAndIsClaimed(
         bytes32 policyId
     ) external view returns (address, bool);
+
+    function updateClaimRequestedStatus(
+        bytes32 policyId,
+        bool _claimRequestedStatus
+    ) external;
 }

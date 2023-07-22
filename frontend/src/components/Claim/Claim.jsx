@@ -7,7 +7,6 @@ import ClaimDataCard from "./ClaimDataCard";
 const token = process.env.REACT_APP_WEB3_TOKEN;
 
 const Claim = () => {
-	
 	const [activePolicies, setactivePolicies] = useState([]);
 	const [policyData, setPolicyData] = useState([]);
 	const [account, setAccount] = useState(null);
@@ -50,7 +49,7 @@ const Claim = () => {
 				const data = await getPolicy(policyId);
 
 				if (data.success) {
-					const ipfsHash = data.data[11];
+					const ipfsHash = data.data[8];
 
 					const client = new Web3Storage({ token: token });
 					const cid = ipfsHash.replace("ipfs://", "");
@@ -72,11 +71,13 @@ const Claim = () => {
 						startDate: data.data[3].toString(),
 						endDate: data.data[4].toString(),
 						claimed: data.data[5],
-						breed: data.data[6],
-						ageInMonths: data.data[7].toString(),
-						region: data.data[8],
-						healthCondition: data.data[9],
-						policyType: data.data[10],
+						claimRequested: data.data[6],
+
+						breed: data.data[9].breed,
+						ageInMonths: data.data[9].ageInMonths.toString(),
+						region: data.data[9].region,
+						healthCondition: data.data[9].healthCondition,
+						policyType: data.data[7],
 						ipfsHash: image,
 					};
 
