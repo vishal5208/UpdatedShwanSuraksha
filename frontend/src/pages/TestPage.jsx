@@ -390,16 +390,19 @@ const TestPage = () => {
 
 					{/* supporting docs */}
 					{/* File Upload */}
-					<div className="col-span-4 border-2 p-2">
+					<div className="col-span-4 border-2 p-2"> 
 						<h2 className="text-center text-2xl font-bold py-4">
 							Supporting Documents
 						</h2>
 						<form
 							id="upload-form"
-							className="flex flex-col space-y-2"
+							className="flex flex-col items-center justify-center space-y-2"
 							onSubmit={handleFileSubmit}
 						>
-							<label htmlFor="filepicker" className="text-black sm:text-lg">
+							<label
+								htmlFor="filepicker"
+								className="font-semibold sm:text-lg font-spaceGrotesk"
+							>
 								Pick supporting images or PDFs for claim.
 							</label>
 							<input
@@ -413,7 +416,7 @@ const TestPage = () => {
 								required
 							/>
 
-							<div className="self-center">
+							<div className=" ">
 								<button
 									type="submit"
 									disabled={isUploading}
