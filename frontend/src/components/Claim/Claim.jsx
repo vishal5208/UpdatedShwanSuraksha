@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { getActivePoliciyOf, getPolicy } from "../backendConnectors";
-
+import { Link } from "react-router-dom";
 import { Web3Storage } from "web3.storage";
 import ClaimDataCard from "./ClaimDataCard";
 
@@ -12,7 +12,6 @@ const Claim = () => {
 	const [policyData, setPolicyData] = useState([]);
 	const [account, setAccount] = useState(null);
 	const [policyDetailsFetching, setPolicyDetailsFetching] = useState(false);
-
 
 	// whenever account changes fetch the new policy ids
 	useEffect(() => {
@@ -30,7 +29,6 @@ const Claim = () => {
 		fetchData();
 	}, [account]);
 
-	
 	// set event listner to listen for accounts change and whenever componets unmount remove the listner
 	useEffect(() => {
 		const handleAccountsChanged = (accounts) => {
@@ -44,7 +42,6 @@ const Claim = () => {
 		};
 	}, []);
 
-	
 	useEffect(() => {
 		const fetchPolicyData = async () => {
 			let updatedPolicyData = [];
@@ -93,13 +90,26 @@ const Claim = () => {
 		fetchPolicyData();
 	}, [activePolicies]);
 
+	const handleRequestClaim = async (policyId) => {};
+
 	return (
 		<section className="container mx-auto  py-8">
 			<div className="flex justify-center">
 				<div className="flex flex-col space-y-9 bg-white ">
-					<h2 className="text-3xl font-bold text-center mt-4">
-						Active Policies
-					</h2>
+					<div className="flex justify-evenly">
+						<h2 className="text-3xl self-center font-bold text-center mt-4">
+							Active Policies
+						</h2>
+
+						<button
+							onClick={handleRequestClaim}
+							className="self-center uppercase text-center text-white sm:text-2xl text-base font-semibold p-3 mt-2 rounded shadow bg-gradient-to-l  from-black to-purple-800 sm:py-2"
+						>
+							<Link to="/requestClaim" className="text-white uppercase">
+								Request Claim
+							</Link>
+						</button>
+					</div>
 					{policyData.length > 0 && !policyDetailsFetching ? (
 						<div className="grid grid-cols-2 gap-4 p-4 uppercase">
 							{policyData.map((policy) => (
