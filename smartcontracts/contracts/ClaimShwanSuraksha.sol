@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.4;
 
 import "./interfaces/IShwanSurksha.sol";
 
@@ -7,6 +7,9 @@ contract ClaimShwanSuraksha {
     IShwanSurksha public shwanSuraksha;
     mapping(bytes32 => ClaimPolicyData) private claimPolicies;
     bytes32[] private policyIds;
+
+    //events
+    event ClaimRequested(bytes32 indexed policyId);
 
     address admin;
 
@@ -53,6 +56,7 @@ contract ClaimShwanSuraksha {
         VeterinaryInfo veterinaryInfo;
         ClaimAmount claimAmount;
         string supportinDocIpfsHash;
+        bool isAdminApproved;
     }
 
     function requestClaimPolicy(
@@ -62,9 +66,12 @@ contract ClaimShwanSuraksha {
         string memory _supportinDocIpfsHash,
         ClaimAmount memory _claimAmount
     ) external {
-        address policyOwner = shwanSuraksha.getPolicyHolderAddress(policyId);
+        (address owner, bool claimed) = shwanSuraksha
+            .getPolicyOwnerAndIsClaimed(policyId);
+        require(!claimed, "Policy has already been claimed");
+
         require(
-            policyOwner == msg.sender,
+            owner == msg.sender,
             "Policy does not exist or you are not the owner"
         );
 
@@ -72,14 +79,17 @@ contract ClaimShwanSuraksha {
             _claimDetails,
             _veterinaryInfo,
             _claimAmount,
-            _supportinDocIpfsHash
+            _supportinDocIpfsHash,
+            false
         );
 
         claimPolicies[policyId] = newClaimPolicyData;
         policyIds.push(policyId);
+
+        emit ClaimRequested(policyId);
     }
 
-    function removeClaimPolicy(bytes32 policyId) external {
+    function removeClaim(bytes32 policyId) external {
         address policyOwner = shwanSuraksha.getPolicyHolderAddress(policyId);
         require(
             policyOwner == msg.sender,
@@ -97,10 +107,44 @@ contract ClaimShwanSuraksha {
         }
     }
 
+    function updateClaimStatus(
+        bytes32 policyId,
+        bool _status
+    ) external onlyAdmin {
+        ClaimPolicyData storage policyData = claimPolicies[policyId];
+        require(!policyData.isAdminApproved, "Already approved by admin");
+        policyData.isAdminApproved = _status;
+    }
+
     // getters
     function getClaimPolicies(
         bytes32 policyId
-    ) external view returns (ClaimPolicyData memory) {
-        return claimPolicies[policyId];
+    )
+        external
+        view
+        returns (
+            ClaimDetails memory,
+            VeterinaryInfo memory,
+            ClaimAmount memory,
+            string memory,
+            bool
+        )
+    {
+        ClaimPolicyData storage claimPolicyData = claimPolicies[policyId];
+        return (
+            claimPolicyData.claimDetails,
+            claimPolicyData.veterinaryInfo,
+            claimPolicyData.claimAmount,
+            claimPolicyData.supportinDocIpfsHash,
+            claimPolicyData.isAdminApproved
+        );
+    }
+
+    function getActivePoliciesForClaim()
+        external
+        view
+        returns (bytes32[] memory)
+    {
+        return policyIds;
     }
 }

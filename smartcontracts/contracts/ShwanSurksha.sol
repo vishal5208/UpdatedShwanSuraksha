@@ -4,7 +4,7 @@ pragma solidity 0.8.4;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./interfaces/IPremimumCalculator.sol";
-import "./ClaimShwanSuraksha.sol";
+import "./interfaces/IClaimShwanSuraksha.sol";
 
 contract ShwanSurksha {
     struct Policy {
@@ -49,7 +49,7 @@ contract ShwanSurksha {
 
     IERC20 usdc;
     IPremimumCalculator premimumCalculator;
-    address private claimShwanSuraksha;
+    IClaimShwanSuraksha private claimShwanSuraksha;
 
     address admin;
 
@@ -65,11 +65,11 @@ contract ShwanSurksha {
     function updateContractsAddress(
         address _usdcTokenAddress,
         address _premimumCalculator,
-        address _claimShwanSurakshaContractAddress
+        address _claimShwanSuraksha
     ) external onlyAdmin {
         usdc = IERC20(_usdcTokenAddress);
         premimumCalculator = IPremimumCalculator(_premimumCalculator);
-        claimShwanSuraksha = _claimShwanSurakshaContractAddress;
+        claimShwanSuraksha = IClaimShwanSuraksha(_claimShwanSuraksha);
     }
 
     // Function to add a new policy
@@ -146,8 +146,15 @@ contract ShwanSurksha {
 
     function approveClaim(bytes32 policyId) external onlyAdmin returns (bool) {
         Policy storage _policy = policy[policyId];
+        (, , , , bool isAdminApproved) = claimShwanSuraksha.getClaimPolicies(
+            policyId
+        );
 
         require(!_policy.claimed, "Policy has already been claimed");
+        require(
+            !isAdminApproved,
+            "Policy has already been approved by the administrator."
+        );
 
         require(
             block.timestamp > _policy.startDate,
@@ -155,10 +162,12 @@ contract ShwanSurksha {
         );
 
         _policy.claimed = true;
+        claimShwanSuraksha.updateClaimStatus(policyId, true);
 
         bool isDone = usdc.transfer(_policy.owner, _policy.payout);
 
         if (isDone) {
+            removePolicy(_policy.owner, policyId);
             emit PolicyClaimed(policyId, _policy.owner, _policy.payout);
             return true;
         }
@@ -191,6 +200,8 @@ contract ShwanSurksha {
     }
 
     function removePolicy(address policyHolder, bytes32 policyId) internal {
+        delete policy[policyId];
+
         bytes32[] storage policies = policyHolderToIDs[policyHolder];
         for (uint i = 0; i < policies.length; i++) {
             if (policies[i] == policyId) {
@@ -276,5 +287,14 @@ contract ShwanSurksha {
         require(_policy.owner != address(0), "Policy does not exist");
 
         return _policy.owner;
+    }
+
+    function getPolicyOwnerAndIsClaimed(
+        bytes32 policyId
+    ) external view returns (address, bool) {
+        Policy storage _policy = policy[policyId];
+        require(_policy.owner != address(0), "Policy does not exist");
+
+        return (_policy.owner, _policy.claimed);
     }
 }

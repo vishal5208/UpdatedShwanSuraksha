@@ -30,7 +30,7 @@ const ClaimDataCard = ({ policy }) => {
 	}, [confirmedPolicies]);
 
 	return (
-		<div className="flex flex-col p-2 text-lg border-2 border-solid border-neutral-900">
+		<div className="flex flex-col space-y-4 p-2 text-lg border-2 border-solid border-neutral-900">
 			<p>
 				<span className="font-bold text-gray-800">Policy ID:</span>{" "}
 				{policy.policyId}
@@ -88,11 +88,11 @@ const ClaimDataCard = ({ policy }) => {
 				</p>
 			</div>
 
-			<div className="w-[50%] h-[50%] self-center my-4 border border-gray-300 rounded-lg overflow-hidden">
+			<div className="h-[300px] w-[300px] p-4 self-center rounded-full overflow-hidden flex items-center justify-center border border-gray-500">
 				<img
 					src={policy.ipfsHash}
 					alt="Pet"
-					className="w-full h-full object-cover"
+					className="h-full w-full object-fill rounded-full"
 				/>
 			</div>
 

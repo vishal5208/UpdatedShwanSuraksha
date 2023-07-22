@@ -19,31 +19,31 @@ interface IClaimShwanSuraksha {
         string treatmentProvided;
     }
 
-    struct SupportingDocumentation {
-        string[] ipfsHashes;
-    }
-
     struct ClaimAmount {
         uint256 totalAmount;
         string breakdownOfExpenses;
-        uint256 deductible;
-        uint256 limit;
-    }
-
-    struct Declaration {
-        bool isAccurateAndTruthful;
-        string signature;
     }
 
     struct ClaimPolicyData {
         ClaimDetails claimDetails;
         VeterinaryInfo veterinaryInfo;
-        SupportingDocumentation supportingDocs;
         ClaimAmount claimAmount;
-        Declaration declaration;
+        string supportinDocIpfsHash;
+        bool isAdminApproved;
     }
 
     function getClaimPolicies(
         bytes32 policyId
-    ) external view returns (ClaimPolicyData memory);
+    )
+        external
+        view
+        returns (
+            ClaimDetails memory,
+            VeterinaryInfo memory,
+            ClaimAmount memory,
+            string memory,
+            bool
+        );
+
+    function updateClaimStatus(bytes32 policyId, bool _status) external;
 }
