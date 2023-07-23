@@ -4,6 +4,7 @@ import {
 	ClaimPage,
 	TestPage,
 	RequestClaimFormPage,
+	AdminPage,
 } from "./pages";
 import { Route, Routes } from "react-router-dom";
 
@@ -16,6 +17,7 @@ function App() {
 				<Route path="/claim" element={<ClaimPage />} />
 				<Route path="/test" element={<TestPage />} />
 				<Route path="/requestClaim" element={<RequestClaimFormPage />} />
+				<Route path="/admin" element={<AdminPage />} />
 			</Routes>
 		</div>
 	);

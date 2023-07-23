@@ -61,3 +61,70 @@ export const requestClaimPolicy = async (
 		};
 	}
 };
+
+export const getActivePoliciesForClaim = async () => {
+	try {
+		if (typeof window.ethereum !== "undefined") {
+			await requestAccount();
+			const provider = new ethers.providers.Web3Provider(window.ethereum);
+			const signer = provider.getSigner();
+
+			const contract = new ethers.Contract(
+				claimShwanSurakshaContractAddr,
+				claimShwanSurakshaContractAbi,
+				signer
+			);
+
+			const policyIds = await contract.getActivePoliciesForClaim();
+
+			// console.log(policyIds);
+			return {
+				success: true,
+				activePolicyIdsForClaim: policyIds,
+			};
+		} else {
+			return {
+				success: false,
+				msg: "Please connect your wallet!",
+			};
+		}
+	} catch (error) {
+		return {
+			success: false,
+			msg: error.message,
+		};
+	}
+};
+
+export const getRequestedPolicyIdData = async (policyId) => {
+	try {
+		if (typeof window.ethereum !== "undefined") {
+			await window.ethereum.request({ method: "eth_requestAccounts" });
+			const provider = new ethers.providers.Web3Provider(window.ethereum);
+			const signer = provider.getSigner();
+			const contract = new ethers.Contract(
+				claimShwanSurakshaContractAddr,
+				claimShwanSurakshaContractAbi,
+				signer
+			);
+
+			const policyData = await contract.getRequestedPolicyIdData(policyId);
+
+			return {
+				success: true,
+				policyId: policyId,
+				data: policyData,
+			};
+		} else {
+			return {
+				success: false,
+				msg: "Please connect your wallet!",
+			};
+		}
+	} catch (error) {
+		return {
+			success: false,
+			msg: error.message,
+		};
+	}
+};

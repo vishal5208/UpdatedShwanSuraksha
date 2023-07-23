@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Web3Storage } from "web3.storage";
 import { useLocation } from "react-router-dom";
 
-import { requestClaimPolicy } from "../backendConnectors/claimShwanSurakshaConnector";
+import { requestClaimPolicy } from "../../backendConnectors/claimShwanSurakshaConnector";
 const token = process.env.REACT_APP_WEB3_TOKEN;
 
 const RequestClaimForm = ({ policyId }) => {
@@ -35,22 +35,41 @@ const RequestClaimForm = ({ policyId }) => {
 		breakdownOfExpenses: "",
 	});
 
-	// Function to handle form submission
-	const handleSubmit = async (event) => {
+	const handleSumbit = async (event) => {
 		event.preventDefault();
 
-		const result = await requestClaimPolicy(
-			policyId,
-			claimDetails,
-			veterinaryInfo,
-			cid,
-			claimAmount
-		);
+		const client = new Web3Storage({ token });
 
-		if (result.success) {
-			alert(result.msg);
-		} else {
-			console.log(result.msg);
+		try {
+			setSubmitting(true);
+			setIsUploading(true);
+			const cid = await client.put(files);
+			setIsUploading(false);
+			console.log("cid: ", cid);
+
+			setCid(cid); // Set the obtained CID in the state
+
+			// Use the obtained CID in the requestClaimPolicy function
+			const result = await requestClaimPolicy(
+				policyId,
+				claimDetails,
+				veterinaryInfo,
+				cid,
+				claimAmount
+			);
+
+			if (result.success) {
+				alert(result.msg);
+			} else {
+				console.log(result.msg);
+			}
+
+			setSubmitting(false);
+
+			setCid(""); // Reset CID after submission
+		} catch (error) {
+			console.error("Error submitting files:", error);
+			setIsUploading(false);
 		}
 	};
 
@@ -65,31 +84,6 @@ const RequestClaimForm = ({ policyId }) => {
 			...veterinaryInfo,
 			visitDates: [...veterinaryInfo.visitDates, ""],
 		});
-	};
-
-	const handleFileSubmit = async (event) => {
-		event.preventDefault();
-
-		const client = new Web3Storage({ token });
-
-		try {
-			setSubmitting(true);
-			setIsUploading(true);
-			const cid = await client.put(files);
-			setIsUploading(false);
-			console.log("cid: ", cid);
-
-			setCid(cid);
-
-			if (cid !== "") handleSubmit(event);
-
-			setSubmitting(false);
-
-			setCid("");
-		} catch (error) {
-			console.error("Error submitting files:", error);
-			setIsUploading(false);
-		}
 	};
 
 	return (
@@ -114,7 +108,7 @@ const RequestClaimForm = ({ policyId }) => {
 
 			<form
 				onSubmit={(event) => {
-					handleFileSubmit(event); // Handle file submission here
+					handleSumbit(event); // Handle file submission here
 				}}
 				className="  w-4/5 mx-auto"
 			>
@@ -401,11 +395,7 @@ const RequestClaimForm = ({ policyId }) => {
 						<h2 className="text-center text-2xl font-bold py-4">
 							Supporting Documents
 						</h2>
-						<div
-							id="upload-form"
-							className="flex flex-col items-center justify-center space-y-2"
-							onSubmit={handleFileSubmit}
-						>
+						<div className="flex flex-col items-center justify-center space-y-2">
 							<label
 								htmlFor="filepicker"
 								className="font-semibold sm:text-lg font-spaceGrotesk"

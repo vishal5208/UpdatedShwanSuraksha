@@ -120,7 +120,7 @@ contract ClaimShwanSuraksha {
     }
 
     // getters
-    function getClaimPolicies(
+    function getRequestedPolicyIdData(
         bytes32 policyId
     )
         external

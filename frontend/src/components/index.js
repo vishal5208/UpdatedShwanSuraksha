@@ -3,7 +3,17 @@ import { Wallet } from "./Wallet/Wallet";
 import Hero from "./Hero/Hero";
 import Footer from "./Footer/Footer";
 import QuoteForm from "./QuoteForm/QuoteForm";
-import Claim from "./Claim/Claim";
-import RequestClaimForm from "./Claim/RequestClaimForm";
+import RequestClaimForm from "./Claim/User/RequestClaimForm";
+import Claim from "./Claim/User/Claim";
+import Admin from "./Claim/Admin/Admin";
 
-export { Header, Wallet, Hero, Footer, QuoteForm, Claim, RequestClaimForm };
+export {
+	Header,
+	Wallet,
+	Hero,
+	Footer,
+	QuoteForm,
+	Claim,
+	RequestClaimForm,
+	Admin,
+};

@@ -4,11 +4,11 @@ import { Web3Storage } from "web3.storage";
 import {
 	getActivePoliciesForClaim,
 	getRequestedPolicyIdData,
-} from "../components/backendConnectors/claimShwanSurakshaConnector";
+} from "../../backendConnectors";
 
 const token = process.env.REACT_APP_WEB3_TOKEN;
 
-const TestPage = () => {
+const Admin = () => {
 	const [activePolicies, setactivePolicies] = useState([]);
 	const [policyData, setPolicyData] = useState([]);
 	const [account, setAccount] = useState(null);
@@ -98,4 +98,4 @@ const TestPage = () => {
 	);
 };
 
-export default TestPage;
+export default Admin;

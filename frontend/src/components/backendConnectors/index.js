@@ -5,4 +5,8 @@ import {
 } from "./shwanSurkshaConnector";
 import { calculatePremium } from "./PremiumCalculatorConnector";
 
-export { addPolicy, getActivePoliciyOf, getPolicy, calculatePremium };
+
+
+import { getActivePoliciesForClaim , getRequestedPolicyIdData} from "./claimShwanSurakshaConnector";
+
+export { addPolicy, getActivePoliciyOf, getPolicy, calculatePremium, getActivePoliciesForClaim, getRequestedPolicyIdData };

@@ -46,6 +46,15 @@ const Header = () => {
 						</Link>
 					</li>
 
+					<li>
+						<Link
+							to="/admin"
+							className="text-white hover:text-gray-300 cursor-pointer"
+						>
+							Admin
+						</Link>
+					</li>
+
 					{/* remove it after */}
 					<li>
 						<Link

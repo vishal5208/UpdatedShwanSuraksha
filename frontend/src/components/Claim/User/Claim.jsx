@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { getActivePoliciyOf, getPolicy } from "../backendConnectors";
+import { getActivePoliciyOf, getPolicy } from "../../backendConnectors";
 import { Web3Storage } from "web3.storage";
 import ClaimDataCard from "./ClaimDataCard";
 
