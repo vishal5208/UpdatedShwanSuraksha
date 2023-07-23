@@ -6,6 +6,8 @@ import {
 	getRequestedPolicyIdData,
 } from "../../backendConnectors";
 
+import RequestedClaimDataCard from "./RequestedClaimDataCard";
+
 const token = process.env.REACT_APP_WEB3_TOKEN;
 
 const Admin = () => {
@@ -52,29 +54,18 @@ const Admin = () => {
 				console.log("data : ", data);
 
 				if (data.success) {
-					console.log(data.data);
 					const ipfsHash = data.data[3];
+					console.log("ipfshash : ", ipfsHash);
 
-					const client = new Web3Storage({ token: token });
-					const cid = ipfsHash.replace("ipfs://", "");
-
-					const response = await client.get(cid);
-
-					if (!response.ok) {
-						console.error(`Error fetching image for Policy ID: ${policyId}`);
-						continue; // Skip this policy and move to the next one
-					}
-
-					const files = await response.files();
-					const image = URL.createObjectURL(files[0]);
+					const documentLink = `https://dweb.link/ipfs/${ipfsHash}`;
 
 					const policyData = {
 						policyId: policyId,
 						claimDetails: data.data[0],
 						veterinaryInfo: data.data[1],
 						claimAmount: data.data[2],
-						isAdminApproved: data.data[3],
-						ipfsHash: image,
+						// isAdminApproved: data.data[3],
+						ipfsFiles: documentLink,
 					};
 
 					updatedPolicyData.push(policyData);
@@ -89,11 +80,41 @@ const Admin = () => {
 
 	return (
 		<div>
-			{/* <p>
-				data :{" "}
-				{policyData.length > 0 &&
-					policyData.map((policy) => <div key={policy.policyId}>{policy}</div>)}
-			</p> */}
+			<section className="container mx-auto  py-8">
+				<div className="flex justify-center">
+					<div className="flex flex-col space-y-9 bg-white ">
+						<div className="flex justify-evenly">
+							<h2 className="text-3xl self-center font-bold text-center mt-4">
+								Claim Details Overview
+							</h2>
+						</div>
+						{policyData.length > 0 && !policyDetailsFetching ? (
+							<div className="grid grid-cols-2 gap-4 p-4 uppercase">
+								{policyData.map((policy) => (
+									<RequestedClaimDataCard
+										key={policy.policyId}
+										policy={policy}
+									/>
+								))}
+							</div>
+						) : (
+							<div>
+								{policyData.length === 0 && !policyDetailsFetching && (
+									<p className="text-center text-xl font-semibold text-black p-4">
+										No active claim requests found.
+									</p>
+								)}
+
+								{policyDetailsFetching && (
+									<div className="text-xl font-semibold text-black">
+										Fetching claim requests details... Please wait a moment.
+									</div>
+								)}
+							</div>
+						)}
+					</div>
+				</div>
+			</section>
 		</div>
 	);
 };
