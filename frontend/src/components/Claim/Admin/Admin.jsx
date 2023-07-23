@@ -8,8 +8,6 @@ import {
 
 import RequestedClaimDataCard from "./RequestedClaimDataCard";
 
-const token = process.env.REACT_APP_WEB3_TOKEN;
-
 const Admin = () => {
 	const [activePolicies, setactivePolicies] = useState([]);
 	const [policyData, setPolicyData] = useState([]);
@@ -59,12 +57,13 @@ const Admin = () => {
 
 					const documentLink = `https://dweb.link/ipfs/${ipfsHash}`;
 
+					console.log("approve? : ", data.data[4]);
 					const policyData = {
 						policyId: policyId,
 						claimDetails: data.data[0],
 						veterinaryInfo: data.data[1],
 						claimAmount: data.data[2],
-						// isAdminApproved: data.data[3],
+						isAdminApproved: data.data[4],
 						ipfsFiles: documentLink,
 					};
 

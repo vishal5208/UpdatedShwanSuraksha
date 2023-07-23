@@ -23,6 +23,14 @@ contract ClaimShwanSuraksha {
         _;
     }
 
+    modifier onlyShwanSuraksha() {
+        require(
+            msg.sender == address(shwanSuraksha),
+            "Only shwansurakhsha contract can call."
+        );
+        _;
+    }
+
     function updateShwanSurakshaAddr(
         address _shwanSurakshaAddr
     ) external onlyAdmin {
@@ -113,7 +121,7 @@ contract ClaimShwanSuraksha {
     function updateClaimStatus(
         bytes32 policyId,
         bool _status
-    ) external onlyAdmin {
+    ) external onlyShwanSuraksha {
         ClaimPolicyData storage policyData = claimPolicies[policyId];
         require(!policyData.isAdminApproved, "Already approved by admin");
         policyData.isAdminApproved = _status;

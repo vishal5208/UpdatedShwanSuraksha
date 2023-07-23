@@ -32,7 +32,7 @@ interface IClaimShwanSuraksha {
         bool isAdminApproved;
     }
 
-    function getClaimPolicies(
+    function getRequestedPolicyIdData(
         bytes32 policyId
     )
         external

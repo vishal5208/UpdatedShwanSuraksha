@@ -255,3 +255,44 @@ export const cancelPolicy = async (policyId) => {
 		};
 	}
 };
+
+export const approveClaim = async (policyId) => {
+	console.log("aalo : ", policyId);
+	try {
+		if (typeof window.ethereum !== "undefined") {
+			await requestAccount();
+			const provider = new ethers.providers.Web3Provider(window.ethereum);
+			const signer = provider.getSigner();
+
+			const contract = new ethers.Contract(
+				shwanSurkshaAddress,
+				shwanSurkshaAbi,
+				signer
+			);
+
+			const tx = await contract.approveClaim(policyId);
+
+			const txRec = await tx.wait();
+
+			const { args } = txRec.events.find(
+				(event) => event.event === "PolicyClaimed"
+			);
+
+			console.log("args : ", args);
+			return {
+				success: true,
+				msg: "The claim payout will be transferred to the policy holder's account.",
+			};
+		} else {
+			return {
+				success: false,
+				msg: "Please connect your wallet!",
+			};
+		}
+	} catch (error) {
+		return {
+			success: false,
+			msg: error.message,
+		};
+	}
+};

@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { Link } from "react-router-dom";
-
+import { approveClaim } from "../../backendConnectors/shwanSurkshaConnector";
 const RequestedClaimDataCard = ({ policy }) => {
 	function formatIndianDateTime(dateTimeString) {
 		const dateAndTime = new Date(dateTimeString);
@@ -21,12 +21,25 @@ const RequestedClaimDataCard = ({ policy }) => {
 		return formattedDateAndTime;
 	}
 
+	const handleApprove = async (policyId) => {
+		const tx = await approveClaim(policyId);
+		if (tx.success) {
+			alert(tx.msg);
+		} else {
+			console.log(tx.msg);
+		}
+	};
+
 	return (
-		<div className="container mx-auto p-4 text-center border-2 border-solid border-neutral-900">
+		<div className="container space-y-3 mx-auto p-4 text-center border-2 border-solid border-neutral-900">
 			{/* Policy ID */}
-			<div className="border-2  border-solid border-neutral-900 p-4 rounded-lg whitespace-normal overflow-auto">
+			<div className="border-2 space-y-2  border-solid border-neutral-900 p-4 rounded-lg whitespace-normal overflow-auto">
 				<p className="text-lg text-gray-800">
 					<span className="font-bold ">Policy ID:</span> {policy.policyId}
+				</p>
+				<p>
+					<span className="font-bold text-gray-800">Approval Status: </span>
+					{policy.isAdminApproved ? "YES" : "NO"}
 				</p>
 			</div>
 
@@ -148,6 +161,14 @@ const RequestedClaimDataCard = ({ policy }) => {
 					</p>
 				</div>
 			</div>
+
+			<button
+				type="submit"
+				onClick={() => handleApprove(policy.policyId)}
+				className="text-white sm:text-2xl text-base font-semibold p-3 mt-2 rounded shadow bg-gradient-to-l  from-black to-purple-800 sm:py-2"
+			>
+				SUBMIT
+			</button>
 		</div>
 	);
 };

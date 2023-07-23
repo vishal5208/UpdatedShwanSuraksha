@@ -41,7 +41,7 @@ const ClaimDataCard = ({ policy }) => {
 					{policy.claimed ? "YES" : "NO"}
 				</p>
 				<p>
-					<span className="font-bold text-gray-800">claimRequested:</span>{" "}
+					<span className="font-bold text-gray-800">claim Requested:</span>{" "}
 					{policy.claimRequested ? "YES" : "NO"}
 				</p>
 				<p>

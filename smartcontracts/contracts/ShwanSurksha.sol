@@ -5,6 +5,7 @@ pragma solidity 0.8.4;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./interfaces/IPremimumCalculator.sol";
 import "./interfaces/IClaimShwanSuraksha.sol";
+import "hardhat/console.sol";
 
 contract ShwanSurksha {
     struct PetData {
@@ -155,10 +156,10 @@ contract ShwanSurksha {
     }
 
     function approveClaim(bytes32 policyId) external onlyAdmin returns (bool) {
+        console.log("idhar");
         Policy storage _policy = policy[policyId];
-        (, , , , bool isAdminApproved) = claimShwanSuraksha.getClaimPolicies(
-            policyId
-        );
+        (, , , , bool isAdminApproved) = claimShwanSuraksha
+            .getRequestedPolicyIdData(policyId);
 
         require(!_policy.claimed, "Policy has already been claimed");
         require(
