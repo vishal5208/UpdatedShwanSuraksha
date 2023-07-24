@@ -95,7 +95,6 @@ export const getActivePoliciesForClaim = async () => {
 		};
 	}
 };
-
 export const getRequestedPolicyIdData = async (policyId) => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
@@ -128,4 +127,3 @@ export const getRequestedPolicyIdData = async (policyId) => {
 		};
 	}
 };
-
