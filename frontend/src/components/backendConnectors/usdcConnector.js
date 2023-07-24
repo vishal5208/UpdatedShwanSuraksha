@@ -5,13 +5,45 @@ const usdcContractAddr = contracts.USDCToken[1];
 const usdcContractAbi = contracts.USDCToken[0];
 const sixDecimals = 6;
 
+export const getUsdc = async () => {
+	try {
+		if (typeof window.ethereum !== "undefined") {
+			await requestAccount();
+			const provider = new ethers.providers.Web3Provider(window.ethereum);
+			const signer = provider.getSigner();
+
+			// usdc contract
+			const contract = new ethers.Contract(
+				usdcContractAddr,
+				usdcContractAbi,
+				signer
+			);
+
+			const tx = await contract.getUsdc();
+			await tx.wait();
+			return {
+				success: true,
+			};
+		} else {
+			return {
+				success: false,
+				msg: "Please connect your wallet!",
+			};
+		}
+	} catch (error) {
+		return {
+			success: false,
+			msg: error.message,
+		};
+	}
+};
+
 export const getWalletBal = async (address) => {
 	try {
 		if (typeof window.ethereum !== "undefined") {
 			await requestAccount();
 			const provider = new ethers.providers.Web3Provider(window.ethereum);
 			const signer = provider.getSigner();
-			console.log({ signer });
 
 			const contract = new ethers.Contract(
 				usdcContractAddr,
@@ -22,8 +54,6 @@ export const getWalletBal = async (address) => {
 			const bal = await contract.balanceOf(
 				address ? address : await signer.getAddress()
 			);
-
-			console.log(bal);
 
 			return {
 				balance: ethers.utils.formatUnits(bal, sixDecimals),

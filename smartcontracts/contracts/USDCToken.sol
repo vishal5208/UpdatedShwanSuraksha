@@ -9,7 +9,7 @@ contract USDCToken is ERC20 {
     }
 
     function getUsdc() external {
-        _mint(msg.sender, 10000000000);
+        _mint(msg.sender, 1000000000);
     }
 
     function decimals() public view virtual override returns (uint8) {

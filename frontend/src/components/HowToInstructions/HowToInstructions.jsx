@@ -1,12 +1,22 @@
-import React from "react";
+import { getUsdc } from "../backendConnectors/usdcConnector";
 
 const HowToInstructions = () => {
+	const handleGetToken = async () => {
+		const tx = await getUsdc();
+
+		if (tx.success) {
+			alert("1000 USDC tokens are sent successfully.");
+		} else {
+			console.log(tx.msg);
+		}
+	};
+	
 	return (
 		<div className="flex space-x-3 w-3/4 mx-auto">
 			<div className="bg-white h-fit shadow-md rounded-lg px-8 py-6 max-w-lg mx-auto mt-10">
 				<h2 className="text-2xl font-bold mb-4">Get 1000 usdc token here</h2>
 				<button
-					type="submit"
+					onClick={handleGetToken}
 					className="text-white sm:text-2xl text-base font-semibold p-3 mt-2 rounded shadow bg-gradient-to-l  from-black to-purple-800 sm:py-2 sm:w-full"
 				>
 					Get Token

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { calculatePremium, addPolicy } from "../backendConnectors";
+import { getWalletBal } from "../backendConnectors/usdcConnector";
 import { Web3Storage } from "web3.storage";
 
 const token = process.env.REACT_APP_WEB3_TOKEN;
@@ -24,6 +25,8 @@ const QuoteForm = () => {
 		policyType: "",
 		ipfsHash: "",
 	});
+	const [account, setAccount] = useState(null);
+	const [userBal, setUserBal] = useState(0);
 
 	// ifps
 	const [files, setFiles] = useState([]);
@@ -121,8 +124,34 @@ const QuoteForm = () => {
 		return policyId;
 	};
 
+	// whenever account changes fetch the new policy ids
+	useEffect(() => {
+		const fetchBal = async () => {
+			const result = await getWalletBal();
+
+			if (result.success) {
+				setUserBal(result.balance);
+			}
+		};
+
+		fetchBal();
+	}, [account, policyId]);
+
+	// set event listner to listen for accounts change and whenever componets unmount remove the listner
+	useEffect(() => {
+		const handleAccountsChanged = (accounts) => {
+			setAccount(accounts[0]);
+		};
+
+		window.ethereum.on("accountsChanged", handleAccountsChanged);
+
+		return () => {
+			window.ethereum.removeListener("accountsChanged", handleAccountsChanged);
+		};
+	}, []);
+
 	return (
-		<section className="flex justify-center items-center w-6/7 mx-auto space-x-9">
+		<section className="flex justify-center items-center w-6/7 mx-auto space-x-9 relative">
 			<div className="flex flex-col flex-wrap sm:space-y-7  w-1/4  font-GeneralSans p-4 my-4 border-2 border-gradient border-black rounded-lg">
 				<p className="text-center sm:text-4xl  text-2xl font-bold py-4">
 					Tell us about your pet.
@@ -318,6 +347,9 @@ const QuoteForm = () => {
 					</div>
 				</div>
 			)}
+			<div className="bg-blue-500 text-white px-4 py-2 mt-4 rounded-lg absolute top-0 right-2 m-2">
+				Your Balance: {userBal} USDC
+			</div>
 		</section>
 	);
 };
