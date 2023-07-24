@@ -6,6 +6,7 @@ import QuoteForm from "./QuoteForm/QuoteForm";
 import RequestClaimForm from "./Claim/User/RequestClaimForm";
 import Claim from "./Claim/User/Claim";
 import Admin from "./Claim/Admin/Admin";
+import HowToInstructions from "./HowToInstructions/HowToInstructions";
 
 export {
 	Header,
@@ -16,4 +17,5 @@ export {
 	Claim,
 	RequestClaimForm,
 	Admin,
+	HowToInstructions,
 };

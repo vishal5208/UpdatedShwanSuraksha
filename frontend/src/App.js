@@ -2,7 +2,7 @@ import {
 	LandingPage,
 	QuotePage,
 	ClaimPage,
-	TestPage,
+	HowToInstructionsPage,
 	RequestClaimFormPage,
 	AdminPage,
 } from "./pages";
@@ -15,7 +15,7 @@ function App() {
 				<Route path="/" element={<LandingPage />} />
 				<Route path="/quoteForm" element={<QuotePage />} />
 				<Route path="/claim" element={<ClaimPage />} />
-				<Route path="/test" element={<TestPage />} />
+				<Route path="/howToInstructions" element={<HowToInstructionsPage />} />
 				<Route path="/requestClaim" element={<RequestClaimFormPage />} />
 				<Route path="/admin" element={<AdminPage />} />
 			</Routes>

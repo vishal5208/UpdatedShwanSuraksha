@@ -58,15 +58,11 @@ const Header = () => {
 					{/* remove it after */}
 					<li>
 						<Link
-							to="/test"
+							to="/howToInstructions"
 							className="text-white hover:text-gray-300 cursor-pointer"
 						>
-							Test
+							How-to Instructions
 						</Link>
-					</li>
-
-					<li className="text-white hover:text-gray-300 cursor-pointer">
-						About
 					</li>
 				</ul>
 				<div className="pr-9 py-2">
