@@ -26,12 +26,6 @@ export function Wallet() {
 		}
 	};
 
-	useEffect(() => {
-		if (connectStatus === "disconnected") {
-			setErrorMsg("");
-		}
-	}, [connectStatus]);
-
 	return (
 		<div className="flex justify-between items-center text-white">
 			{connectStatus === "disconnected" && (
